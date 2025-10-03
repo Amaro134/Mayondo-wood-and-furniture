@@ -1,0 +1,290 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Sale</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    /* Flex container for sidebar + content + footer */
+    .page-wrapper {
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+    }
+
+    aside {
+      width: 180px;
+      background-color: navy;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    aside .logo img {
+      width: 120px;
+      margin-bottom: 15px;
+    }
+
+    aside h2 {
+      font-size: 18px;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #4a5568;
+    }
+
+    .main-content-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .main-content {
+      padding: 20px;
+      flex: 1; /* takes remaining space, pushes footer down */
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .edit-container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #444;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: xx-large;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #444;
+    }
+
+    input, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    button, a.cancel-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: background 0.3s ease;
+    }
+
+    .btn-save {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-save:hover {
+      background-color: #0056b3;
+    }
+
+    .cancel-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    .cancel-btn:hover {
+      background-color: #5a6268;
+    }
+
+    footer {
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding: 15px 0;
+      flex-shrink: 0;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .page-wrapper {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px 20px;
+        height: auto;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <!-- Sidebar -->
+  <aside>
+    <div class="logo">
+      <img src="{% static 'images/2.png' %}" alt="Logo">
+    </div>
+    <h2><i>MANAGER'S DASHBOARD</i></h2>
+    <nav>
+      <a href="{% url 'dashboard' %}"><i class='bx bx-home'></i>Home</a>
+      <a href="{% url 'sales_list' %}"><i class='bx bx-credit-card'></i>Sales</a>
+      <a href="{% url 'stock_list' %}"><i class='bx bxs-store-alt'></i>Stock</a> 
+      <a href="{% url 'user_list' %}"><i class='bx bxs-user-circle'></i>User</a> 
+      <a href="{% url 'logout' %}"><i class='bx bxs-log-out'></i>Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <div class="main-content-wrapper">
+    <div class="main-content">
+      <h1>Edit Sale Record</h1>
+      <div class="edit-container">
+        <h3><i>EDIT SALE</i></h3>
+        <form action="{% url 'salesedit' selected.id %}" method="post">
+          {% csrf_token %}
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="customer_name">Customer name</label>
+              <input type="text" id="customer_name" name="customer_name" value="{{ selected.customer_name }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="product">Product</label>
+              <input type="text" id="product" name="product" value="{{ selected.product }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="quantity_sold">Quantity of Product</label>
+              <input type="number" id="quantity_sold" name="quantity_sold" value="{{ selected.quantity_sold }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="payment_method">Payment Method</label>
+              <select id="payment_method" name="payment_method" required>
+                <option value="Cash" {% if selected.payment_method == "Cash" %}selected{% endif %}>Cash</option>
+                <option value="Cheque" {% if selected.payment_method == "Cheque" %}selected{% endif %}>Cheque</option>
+                <option value="Bank overdraft" {% if selected.payment_method == "Bank overdraft" %}selected{% endif %}>Bank overdraft</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="transport_used">Transport Used</label>
+              <select id="transport_used" name="transport_used" required>
+                <option value="Company_provision" {% if selected.transport_used == "Company_provision" %}selected{% endif %}>Company provision</option>
+                <option value="Self_provision" {% if selected.transport_used == "Self_provision" %}selected{% endif %}>Self provision</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="date_of_sale">Date</label>
+              <input type="date" id="date_of_sale" name="date_of_sale" value="{{ selected.date_of_sale|date:'Y-m-d' }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="product_price">Product Price</label>
+              <input type="number" id="product_price" name="product_price" value="{{ selected.product_price }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="sales_agent">Name of Sales Agent</label>
+              <input type="text" id="sales_agent" name="sales_agent" value="{{ selected.sales_agent }}" required>
+            </div>
+
+            <div class="form-group">
+              <label for="total_amount">Total Amount</label>
+              <input type="text" id="total_amount" name="total_amount" value="{{ selected.total_amount }}" required>
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <a href="{% url 'sales_list' %}" class="cancel-btn">Cancel</a>
+            <button type="submit" class="btn-save">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 Amarorwot Naomi | All Rights Reserved.</p>
+    </footer>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User</title>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<style>
+    /* Body as flex column to keep footer at bottom */
+    body {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Sidebar */
+    aside {
+        width: 180px;
+        background-color: navy;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+    }
+
+    aside .logo img {
+        width: 120px;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    aside h2 {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        font-style: italic;
+        text-align: left;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    nav a:hover {
+        background-color: #4a5568;
+    }
+
+    /* Main content */
+    .main-content {
+        margin-left: 200px;
+        padding: 20px;
+        flex: 1; /* take remaining space so footer stays at bottom */
+    }
+
+    h1, p {
+        text-align: center;
+        margin: 10px 0;
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        max-width: 1000px;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: navy;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #e6f7ff;
+    }
+
+    /* Action buttons */
+    .action-buttons a {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-right: 5px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        color: white;
+        transition: background 0.3s ease;
+    }
+
+    .action-buttons .view { background-color: #10b981; }
+    .action-buttons .view:hover { background-color: #059669; }
+
+    .action-buttons .edit { background-color: #3b82f6; }
+    .action-buttons .edit:hover { background-color: #2563eb; }
+
+    .action-buttons .delete { background-color: #ef4444; }
+    .action-buttons .delete:hover { background-color: #b91c1c; }
+
+    /* Bottom buttons */
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    .btn-container a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        background-color: #2563eb;
+        color: white;
+        transition: background 0.3s ease;
+    }
+
+    .btn-container a:hover {
+        background-color: #1d4ed8;
+    }
+
+    /* Footer styling */
+    footer {
+        background-color: black;
+        color: white;
+        text-align: center;
+        padding: 15px 20px;
+        margin-top: auto; /* push footer to bottom */
+    }
+</style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside>
+        <div class="logo">
+            <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
+        </div>
+        <h2><i>MANAGER'S DASHBOARD</i></h2>
+        <nav>
+            <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>Home</a>
+            <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>Sales</a>
+            
+            <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>Stock</a>
+            <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>User</a>
+            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>Logout</a>
+
+        </nav>
+    </aside> 
+
+    <!-- Main content -->
+    <div class="main-content">
+        <h1>Welcome to Mayondo Wood and Furniture</h1>
+        <div style="text-align:center;">
+            <img src="{% static 'images/2.png' %}" alt="Stock Image" width="60" height="60">
+        </div>
+        <p>Manage our stock efficiently with our user-friendly interface.</p>
+
+        <!-- User Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Password</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.password }}</td>
+                    <td>
+                    <div class="action-buttons">
+                        <a href="{% url 'user_view' user.id %}" class="view">View</a>
+                        <a href="{% url 'user_edit' user.id %}" class="edit">Edit</a>
+                        <a href="{% url 'user_delete' user.id %}" class="delete">Delete</a>
+                    </div>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Bottom buttons -->
+        <div class="btn-container">
+            <a href="{% url 'dashboard'%}"><i class='bx bx-arrow-back mr-2'></i>Back</a>
+            <a href="{% url 'add_user'%}">Add User</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Amarorwot Naomi | All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

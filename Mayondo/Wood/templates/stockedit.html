@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Stock</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Navigation Bar -->
+  <nav class="bg-gray-800 text-white py-4 px-6 flex items-center justify-between shadow-md">
+    <a class="font-bold text-2xl tracking-tight" href="#">My Site</a>
+    <div class="flex items-center space-x-3">
+      <a class="text-sm px-4 py-2 rounded-full hover:bg-gray-700 transition" href="{% url 'stock_list' %}">Stock List</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="text-center my-8">
+    <h1 class="text-3xl font-serif italic text-gray-800">Edit Stock</h1>
+  </header>
+
+  <!-- Edit Stock Form -->
+  <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6">
+    <form action="{% url 'stockedit' selected.id %}" method="post">
+      {% csrf_token %}
+
+      <div class="mb-4">
+        <label class="text-gray-500 text-sm" for="product_name">Product Name</label>
+        <input
+          type="text"
+          id="product_name"
+          name="product_name"
+          value="{{ selected.product_name }}"
+          class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        >
+      </div>
+
+      <div class="mb-4">
+        <label class="text-gray-500 text-sm" for="type_of_product">Type of Product</label>
+        <input
+          type="text"
+          id="type_of_product"
+          name="type_of_product"
+          value="{{ selected.type_of_product }}"
+          class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        >
+      </div>
+
+      <div class="mb-4 grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-gray-500 text-sm" for="cost_price">Cost Price</label>
+          <input
+            type="number"
+            id="cost_price"
+            name="cost_price"
+            value="{{ selected.cost_price }}"
+            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          >
+        </div>
+        <div>
+          <label class="text-gray-500 text-sm" for="selling_price">Selling Price</label>
+          <input
+            type="number"
+            id="selling_price"
+            name="selling_price"
+            value="{{ selected.selling_price }}"
+            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="mb-4 grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-gray-500 text-sm" for="quantity">Quantity</label>
+          <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            value="{{ selected.quantity }}"
+            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          >
+        </div>
+        <div>
+          <label class="text-gray-500 text-sm" for="supplier_name">Supplier Name</label>
+          <input
+            type="text"
+            id="supplier_name"
+            name="supplier_name"
+            value="{{ selected.supplier_name }}"
+            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="text-gray-500 text-sm" for="date_added">Date Added</label>
+        <input
+          type="date"
+          id="date_added"
+          name="date_added"
+          value="{{ selected.date_added|date:'Y-m-d' }}"
+          class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        >
+      </div>
+
+      <div class="mb-4 grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-gray-500 text-sm" for="quality">Quality</label>
+          <input
+            type="text"
+            id="quality"
+            name="quality"
+            value="{{ selected.quality }}"
+            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+        </div>
+        <div>
+          <label class="text-gray-500 text-sm" for="color">Color</label>
+          <input
+            type="text"
+            id="color"
+            name="color"
+            value="{{ selected.color }}"
+            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="text-gray-500 text-sm" for="measurements">Measurements</label>
+        <input
+          type="text"
+          id="measurements"
+          name="measurements"
+          value="{{ selected.measurements }}"
+          class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-between">
+        <a href="{% url 'stock_list' %}" class="px-6 py-2 bg-gray-400 text-white rounded-md shadow hover:bg-gray-500 transition">
+          Cancel
+        </a>
+        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition">
+          Save Changes
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white text-center py-4 mt-10">
+    <p>&copy; 2025 Amarorwot Naomi | All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>

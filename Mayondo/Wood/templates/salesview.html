@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Sale Details</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Sidebar -->
+  <aside class="w-56 bg-blue-900 text-white flex flex-col p-6 fixed top-0 left-0 h-screen shadow-md">
+
+    <div class="logo mb-4">
+      <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" class="w-32 mx-auto">
+    </div>
+    <h2 class="text-lg font-bold italic mb-6 text-center">DASHBOARD</h2>
+    <nav class="flex flex-col gap-3">
+      <a href="{% url 'dashboard' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-home'></i>Home</a>
+      <a href="{% url 'add_sales' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-credit-card'></i>Sales</a>
+      <a href="{% url 'stock_list' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-store-alt'></i>Stock</a>
+      <a href="{% url 'user_list' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-user-circle'></i>User</a>
+      <a href="{% url 'logout' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-log-out'></i>Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main + Footer Wrapper -->
+  <div class="flex flex-col flex-1 ml-56"> <!-- pushes content right of sidebar -->
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+      <h1 class="text-3xl font-serif italic text-gray-800 text-center mb-4">Sale Details</h1>
+      <div class="flex justify-center mb-6">
+        <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" class="w-32">
+      </div>
+      <p class="text-center text-gray-600 mb-8">
+        Here are the details for <span class="font-semibold">{{ selected_sale.customer_name }}</span>’s purchase.
+      </p>
+
+      <!-- Sale Details -->
+      <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-8">
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <dt class="font-semibold text-gray-700">Customer Name</dt>
+            <dd class="text-gray-600">{{ selected_sale.customer_name }}</dd>
+          </div>
+          <div>
+            <dt class="font-semibold text-gray-700">Product</dt>
+            <dd class="text-gray-600">{{ selected_sale.product }}</dd>
+          </div>
+          <div>
+            <dt class="font-semibold text-gray-700">Quantity</dt>
+            <dd class="text-gray-600">{{ selected_sale.quantity_sold }}</dd>
+          </div>
+          <div>
+            <dt class="font-semibold text-gray-700">Payment Method</dt>
+            <dd class="text-gray-600">{{ selected_sale.payment_method }}</dd>
+          </div>
+          <div>
+            <dt class="font-semibold text-gray-700">Transport Used</dt>
+            <dd class="text-gray-600">{{ selected_sale.transport_used }}</dd>
+          </div>
+          <div>
+            <dt class="font-semibold text-gray-700">Date</dt>
+            <dd class="text-gray-600">{{ selected_sale.date_of_sale|date:"F j, Y" }}</dd>
+          </div>
+          <div>
+            <dt class="font-semibold text-gray-700">Product Price</dt>
+            <dd class="text-gray-600">{{ selected_sale.product_price }}</dd>
+          </div>
+          <div>
+            <dt class="font-semibold text-gray-700">Sales Agent</dt>
+            <dd class="text-gray-600">{{ selected_sale.sales_agent }}</dd>
+          </div>
+          <div class="md:col-span-2">
+            <dt class="font-semibold text-gray-700">Total Amount</dt>
+            <dd class="text-gray-600">{{ selected_sale.total_amount }}</dd>
+          </div>
+        </dl>
+
+        <!-- Buttons -->
+        <div class="flex justify-between mt-8">
+          <a href="{% url 'add_sales' %}" class="px-6 py-2 bg-gray-500 text-white rounded-md shadow hover:bg-gray-600 transition">Back</a>
+          <a href="{% url 'salesedit' selected_sale.id %}" class="px-6 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition">Edit</a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+      <p>&copy; 2025 Amarorwot Naomi | All Rights Reserved.</p>
+    </footer>
+  </div>
+
+</body>
+</html>

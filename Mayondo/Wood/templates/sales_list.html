@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Records</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #1f2937;
+      margin-bottom: 2rem;
+    }
+
+    .table-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-grow: 1;
+    }
+
+    table {
+      width: 500%%;
+      border-collapse: collapse;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    thead {
+      background-color: #1e40af;
+      color: #ffffff;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tbody tr:hover {
+      background-color: #dbeafe;
+    }
+
+    .actions a {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 5px;
+      color: white;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-right: 4px;
+    }
+
+    .view { background-color: #16a34a; }
+    .view:hover { background-color: #15803d; }
+
+    .update { background-color: #2563eb; }
+    .update:hover { background-color: #1e40af; }
+
+    .edit { background-color: #f59e0b; }
+    .edit:hover { background-color: #b45309; }
+
+    .delete { background-color: #dc2626; }
+    .delete:hover { background-color: #991b1b; }
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .button-row a {
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .back-button {
+      background-color: #6b7280;
+    }
+    .back-button:hover {
+      background-color: #4b5563;
+    }
+
+    .add-button {
+      background-color: #2563eb;
+    }
+    .add-button:hover {
+      background-color: #1e40af;
+    }
+
+    footer {
+      background-color: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Sales Records</h1>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Payment</th>
+          <th>Transport</th>
+          <th>Agent</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sale in sales %}
+        <tr>
+          <td>{{ sale.customer_name }}</td>
+          <td>{{ sale.product }}</td>
+          <td>{{ sale.quantity_sold }}</td>
+          <td>{{ sale.product.price }}</td>
+          <td>{{ sale.payment_method }}</td>
+          <td>{{ sale.transport_used }}</td>
+          <td>{{ sale.sales_agent }}</td>
+          <td>{{ sale.date_of_sale|date:"Y-m-d" }}</td>
+          <td>{{ sale.total_amount }}</td>
+          <td class="actions">
+            <a href="{% url 'salesview' sale.id %}" class="view"><i class='bx bx-show'></i> View</a>
+            <a href="{% url 'salesedit' sale.id %}" class="edit"><i class='bx bx-edit'></i> Edit</a>
+            <a href="{% url 'sales_delete' sale.id %}" class="delete"><i class='bx bx-trash'></i> Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="10" style="text-align:center; padding: 20px; color: #6b7280;">No sales records found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Buttons below the table -->
+    <div class="button-row">
+      <a href="{% url 'dashboard' %}" class="back-button"><i class='bx bx-arrow-back'></i> Back</a>
+      <a href="{% url 'add_sales' %}" class="add-button">Add Sales</a>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Amarorwot Naomi | All Rights Reserved.
+  </footer>
+
+</body>
+</html>

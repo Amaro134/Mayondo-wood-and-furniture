@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stockpage</title>
+  <!-- Boxicons CDN -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    body {
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1, p {
+      text-align: center;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    .stock-container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 2000px;
+      margin: 20px auto;
+      overflow-x: auto;
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #444;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: xx-large;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: navy;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #e6f7ff;
+    }
+
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-buttons a {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .view {
+      background-color: #22c55e;
+      color: white;
+    }
+    .view:hover {
+      background-color: #16a34a;
+    }
+
+    .delete {
+      background-color: #ef4444;
+      color: white;
+    }
+    .delete:hover {
+      background-color: #dc2626;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .btn-container a,
+    .btn-container button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .btn-container a {
+      background-color: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-container a:hover {
+      background-color: #d1d5db;
+    }
+
+    .btn-container button {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    .btn-container button:hover {
+      background-color: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to Mayondo Wood and Furniture</h1>
+  <div style="text-align:center;">
+    <img src="{% static "images/2.png" %}" alt="Stock Image" width="60" height="60">
+  </div>
+  <p>Manage our stock efficiently with our user-friendly interface.</p>
+
+  <div class="stock-container">
+    <h3><i>STOCK RECORDS</i></h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name of Product</th>
+          <th>Type of Product</th>
+          <th>Cost Price</th>
+          <th>Quantity</th>
+          <th>Product Price</th>
+          <th>Supplier</th>
+          <th>Date</th>
+          <th>Quality</th>
+          <th>Color</th>
+          <th>Measurements</th>
+          <th>Action</th>
+        </tr>
+      </thead>      
+      <tbody>
+        {% for item in stocks %}
+        <!-- Example rows (replace with DB data dynamically) -->
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.type_of_product }}</td>
+          <td>{{ item.costprice }}</td>
+          <td>{{ item.selling_price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.supplier_name }}</td>
+          <td>{{ item.date_added|date:'Y-m-d' }}</td>
+          <td>{{ item.quality }}</td>
+          <td>{{ item.color }}</td>
+          <td>{{ item.measurement }}</td>
+          <td>
+            <div class="action-buttons">
+              <a href="/stockview/{{item.id}}" class="view"><i class='bx bx-show'></i> View</a>
+              <a href="/stockedit/{{item.id}}" class="view"><i class='bx bx-edit'></i> Edit</a>
+              <a href="/stockdelete/{{item.id}}" class="delete"><i class='bx bx-trash'></i> Delete</a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="btn-container">
+        <a href="{% url 'dashboard' %}"><i class='bx bx-arrow-back mr-2'></i> Back</a>
+        <a href="{% url 'addStock' %}">Add Stock</a>
+      </div>
+  </div>
+
+</body>
+</html>

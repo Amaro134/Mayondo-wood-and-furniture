@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Sale</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-56 bg-navy-900 text-white flex flex-col p-6 fixed top-0 left-0 h-screen shadow-md">
+    <div class="logo mb-4">
+      <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" class="w-32 mx-auto">
+    </div>
+    <h2 class="text-lg font-bold italic mb-6 text-center">DASHBOARD</h2>
+    <nav class="flex flex-col gap-3">
+      <a href="{% url 'dashboard' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-home'></i>Home</a>
+      <a href="{% url 'sales' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-credit-card'></i>Sales</a>
+      <!--<a href="{% url 'report' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-bar-chart-alt'></i>Report</a>-->
+      <a href="{% url 'stock' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-store-alt'></i>Stock</a>
+      <a href="{% url 'user' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-user-circle'></i>User</a>
+      <a href="{% url 'logout' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-log-out'></i>Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-60 flex-1 p-8">
+    <h1 class="text-3xl font-serif italic text-gray-800 text-center mb-4">Update Sale Record</h1>
+    <div class="flex justify-center mb-6">
+      <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" class="w-32">
+    </div>
+    <p class="text-center text-gray-600 mb-8">Edit the details for <span class="font-semibold">{{ selected_sale.customer_name }}</span>’s purchase.</p>
+
+    <!-- Update Sales Form -->
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-8">
+      <form action="{% url 'updateSale' selected_sale.id %}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% csrf_token %}
+
+        <div>
+          <label for="customer_name" class="block text-gray-600 mb-1">Customer Name</label>
+          <input type="text" id="customer_name" name="customer_name" value="{{ selected_sale.customer_name }}" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <div>
+          <label for="product" class="block text-gray-600 mb-1">Product</label>
+          <input type="text" id="product" name="product" value="{{ selected_sale.product }}" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <div>
+          <label for="quantity_sold" class="block text-gray-600 mb-1">Quantity</label>
+          <input type="number" id="quantity_sold" name="quantity_sold" value="{{ selected_sale.quantity_sold }}" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <div>
+          <label for="payment_method" class="block text-gray-600 mb-1">Payment Method</label>
+          <select id="payment_method" name="payment_method" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+            <option value="Cash" {% if selected_sale.payment_method == "Cash" %}selected{% endif %}>Cash</option>
+            <option value="Cheque" {% if selected_sale.payment_method == "Cheque" %}selected{% endif %}>Cheque</option>
+            <option value="Bank overdraft" {% if selected_sale.payment_method == "Bank overdraft" %}selected{% endif %}>Bank overdraft</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="transport_used" class="block text-gray-600 mb-1">Transport Used</label>
+          <select id="transport_used" name="transport_used" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+            <option value="Company_provision" {% if selected_sale.transport_used == "Company_provision" %}selected{% endif %}>Company provision</option>
+            <option value="Self_provision" {% if selected_sale.transport_used == "Self_provision" %}selected{% endif %}>Self provision</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="date_of_sale" class="block text-gray-600 mb-1">Date</label>
+          <input type="date" id="date_of_sale" name="date_of_sale" value="{{ selected_sale.date_of_sale|date:'Y-m-d' }}" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <div>
+          <label for="product_price" class="block text-gray-600 mb-1">Product Price</label>
+          <input type="number" id="product_price" name="product_price" value="{{ selected_sale.product_price }}" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <div>
+          <label for="sales_agent" class="block text-gray-600 mb-1">Sales Agent</label>
+          <input type="text" id="sales_agent" name="sales_agent" value="{{ selected_sale.sales_agent }}" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <div class="md:col-span-2">
+          <label for="total_amount" class="block text-gray-600 mb-1">Total Amount</label>
+          <input type="text" id="total_amount" name="total_amount" value="{{ selected_sale.total_amount }}" class="w-full border rounded-md p-2 focus:ring-2 focus:ring-blue-400" required>
+        </div>
+
+        <!-- Buttons -->
+        <div class="md:col-span-2 flex justify-between mt-6">
+          <a href="{% url 'sales' %}" class="px-6 py-2 bg-gray-500 text-white rounded-md shadow hover:bg-gray-600 transition">Cancel</a>
+          <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition">Update</button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+</body>
+</html>
