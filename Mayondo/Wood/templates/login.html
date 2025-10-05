@@ -2,92 +2,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login page
-    </title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: white;
-            padding: 60px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-        .login-container h2 {
-            margin-bottom: 20px;
-        }
-        .login-icon {
-            display: block;
-            margin: 0 auto 20px auto;
-        }
-        .login-container label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .login-container input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .login-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: navy;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .login-container button:hover {
-            background-color: darkblue;
-        }
-        .login-container a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .login-container a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background image */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("{% static 'images/341cf1a6-f721-4ec5-a355-54af1c4a60af.jpg' %}") no-repeat center center/cover;
+      z-index: -1;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px 35px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      width: 350px;
+      text-align: center;
+      animation: fadeIn 0.8s ease-in-out;
+      z-index: 1;
+    }
+
+    .login-container img {
+      margin-bottom: 15px;
+    }
+
+    .login-container h2 {
+      margin-bottom: 10px;
+      color: black;
+    }
+
+    .login-container p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .login-container label {
+      display: block;
+      text-align: left;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border 0.3s ease;
+    }
+
+    .login-container input:focus {
+      outline: none;
+      border: 1px solid #1e3c72;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background: black;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .login-container button:hover {
+      background: #2a5298;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Center login container */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <img src="{% static 'images/2.png' %}" alt="Login Icon" class="login-icon" width="50px" height="50px" style="text-align: center;">
-        <p style="text-align: center;"><i>Get started with our app,just Login and enjoy the experience</i></p>
-        <form action="/submit" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <br><br>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <br><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <br><br>
-            <div class="flex justify-center">
-                <a href="{% url 'dashboard' %}">
-                    <button type="button"
-                        class="mt-6 flex items-center justify-center px-8 py-3 text-base font-normal text-white bg-teal-400 border border-transparent rounded-full text-md hover:bg-teal-300 md:py-4 md:text-2xl md:px-10">
-                        login
-                    </button>
-                </a>
-            </div>
+  <div class="login-container">
+    <img src="{% static 'images/2.png' %}" alt="Login Icon" width="60" height="60">
+    <h2>Welcome Back</h2>
+    <p><i>Login to access your dashboard</i></p>
 
-            <p>Don't have an account? <a href="signup.html">Sign up</a></p>
-            <p><a href="forgot_password.html">Forgot Password?</a></p>
-        </form>
-    </div>
+    <form action="/submit" method="post">
+      {% csrf_token %}
+      {% comment %} <label for="username">Username</label>
+      <input type="text" id="username" name="username" required> {% endcomment %}
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <div class="flex justify-center">
+        <a href="{% url 'dashboard' %}">
+          <button type="button" class="mt-6 flex items-center justify-center px-8 py-3 text-base font-normal text-white bg-teal-400 border border-transparent rounded-full text-md hover:bg-teal-300 md:py-4 md:text-2xl md:px-10">
+            login
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
 </body>
 </html>

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,11 +11,11 @@
       font-family: Arial, sans-serif;
       background-color: #f3f4f6;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
       margin: 0;
+      flex-direction: column;
     }
 
     .logout-container {
@@ -28,7 +29,7 @@
     }
 
     .logout-container h2 {
-      color: #7c3aed; /* purple-700 */
+      color: black; /* purple-700 */
       font-size: 1.75rem;
       font-weight: bold;
       margin-bottom: 0.5rem;
@@ -36,13 +37,14 @@
 
     .logout-container p {
       margin: 0.5rem 0;
+      color: #4b5563;
     }
 
     .btn {
       display: inline-block;
       padding: 0.5rem 1.5rem;
       margin-top: 1rem;
-      background-color: #7c3aed; /* purple-700 */
+      background-color: black; /* purple-700 */
       color: white;
       text-decoration: none;
       border-radius: 5px;
@@ -50,16 +52,17 @@
     }
 
     .btn:hover {
-      background-color: #5b21b6; /* purple-900 */
+      background-color: #1f2937; /* black-700 */
     }
 
     footer {
-      background-color: #1f2937; /* gray-800 */
+      background-color: #1f2937;
       color: white;
       text-align: center;
       padding: 1rem;
       width: 100%;
-      margin-top: auto; /* pushes footer to bottom if content is small */
+      position: fixed;
+      bottom: 0;
     }
   </style>
 </head>
@@ -68,7 +71,7 @@
   <div class="logout-container">
     <h2>You have been logged out</h2>
     <p>Thank you for using our application.</p>
-    <p>Are you sure you want to logout?</p>
+    <p>Click below to return to the home page.</p>
     <a href="{% url 'landingPage' %}" class="btn">Return to Home Page</a>
   </div>
 

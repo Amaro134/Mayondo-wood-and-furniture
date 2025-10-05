@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Stock, Sales, Add_user
 from datetime import datetime
-#from .forms import StockForm
+from .forms import Add_userForm, SalesForm, StockForm, Add_userAuthenticationForm
+from .forms import StockForm
 
 
 # ---------------- Landing ----------------
@@ -86,14 +87,14 @@ def stockedit(request, id):
         stock.save()
         return redirect("stock_list")
 
-    return render(request, "stockedit.html", {"stock": stock})
+    return render(request, "stockedit.html", {"selected": stock})
 
 
 
 # View one stock item by ID
 def stockview(request, id):
     stock = get_object_or_404(Stock, id=id)
-    return render(request, "stockview.html", {"stock": stock})
+    return render(request, "stockview.html", {"selected": stock})
 
 def stockdelete(request, id):
     stock = get_object_or_404(Stock, id=id)
@@ -110,17 +111,24 @@ def stockupdate(request, id):
 
 # ---------------- Dashboard ----------------
 def dashboard(request):
+    # Get latest 5 stocks and sales
+    stocks = Stock.objects.all().order_by('-date_added')[:5]
+    sales = Sales.objects.all().order_by('-date_of_sale')[:5]
+
+    # Summary calculations
     total_stock = Stock.objects.count()  # total products
     current_stock = Stock.objects.filter(quantity__gt=0).count()  # available products
-    restock_value = sum(item.costprice * item.quantity for item in Stock.objects.all())  # total value
+    restock_value = sum(item.costprice * item.quantity for item in Stock.objects.all())  # total cost
 
     context = {
         "total_stock": total_stock,
         "current_stock": current_stock,
         "restock_value": restock_value,
+        "stocks": stocks,
+        "sales": sales,
     }
-    return render(request, "dashboard.html", context)
 
+    return render(request, "dashboard.html", context)
 
 # ---------------- Sales Views ----------------
 # Handle sales form submission
@@ -144,6 +152,8 @@ def add_sales(request):
         )
         sale.save()
         return redirect("sales_list") 
+    else:
+        sale = SalesForm()
     return render(request, "add_sales.html")
 
 

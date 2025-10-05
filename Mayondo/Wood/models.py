@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class Login(models.Model):
@@ -50,7 +51,7 @@ class Stock(models.Model):
     quantity = models.IntegerField()
     selling_price = models.DecimalField(max_digits=10, decimal_places=2)
     supplier_name = models.CharField(max_length=100)
-    date_added = models.DateField()
+    date_added = models.DateField(auto_now_add=True)
     quality = models.CharField(max_length=100)
     color = models.CharField(max_length=50, default="blue")
     measurement = models.CharField(max_length=50, default="0 metres")
@@ -59,16 +60,13 @@ class Stock(models.Model):
         return str(self.product_name)
     
     
-class Add_user(models.Model):
+class Add_user(AbstractUser):
     ROLE_CHOICES = [
         ("Admin", "Admin"),
         ("Manager", "Manager"),
         ("Sales Agent", "Sales Agent"),
     ]    
-    name = models.CharField(max_length=100)
-    email = models.CharField(unique=True)
-    password = models.CharField(max_length=100) 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="Sales Agent")
 
     def __str__(self):
-        return str (self.name)   
+        return str (self.username)   

@@ -11,10 +11,64 @@
       font-family: Arial, sans-serif;
       background-color: #f3f4f6;
       margin: 0;
-      padding: 20px;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      min-height: 100vh; /* ✅ allows footer to stick at bottom */
+    }
+
+    /* Layout wrapper */
+    .layout {
+      display: flex;
+      flex: 1;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      background-color: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .sidebar .logo img {
+      max-width: 100px;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      font-style: italic;
+      text-align: center;
+    }
+
+    .sidebar nav a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .sidebar nav a:hover {
+      background-color: #1f2937;
+      color: #9ca3af;
+    }
+
+    /* Main content */
+    main {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-x: auto;
     }
 
     h1 {
@@ -25,13 +79,12 @@
     }
 
     .table-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      flex-grow: 1;
+      max-width: 100%;
+      overflow-x: auto;
     }
 
     table {
-      width: 500%%;
+      width: 100%;
       border-collapse: collapse;
       background-color: #ffffff;
       border-radius: 8px;
@@ -40,7 +93,7 @@
     }
 
     thead {
-      background-color: #1e40af;
+      background-color: black;
       color: #ffffff;
     }
 
@@ -73,9 +126,6 @@
     .view { background-color: #16a34a; }
     .view:hover { background-color: #15803d; }
 
-    .update { background-color: #2563eb; }
-    .update:hover { background-color: #1e40af; }
-
     .edit { background-color: #f59e0b; }
     .edit:hover { background-color: #b45309; }
 
@@ -86,9 +136,6 @@
       display: flex;
       justify-content: space-between;
       margin-top: 20px;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     .button-row a {
@@ -110,77 +157,99 @@
     }
 
     .add-button {
-      background-color: #2563eb;
+      background-color: black;
     }
     .add-button:hover {
-      background-color: #1e40af;
+      background-color: gray;
     }
 
+    /* Footer */
     footer {
       background-color: #1f2937;
       color: white;
       text-align: center;
-      padding: 15px 0;
-      margin-top: 40px;
+      padding: 4px 0;
+      margin-top: auto; /* sticks footer to bottom */
     }
   </style>
 </head>
 <body>
 
-  <h1>Sales Records</h1>
+  <div class="layout">
 
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Customer</th>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Payment</th>
-          <th>Transport</th>
-          <th>Agent</th>
-          <th>Date</th>
-          <th>Total</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for sale in sales %}
-        <tr>
-          <td>{{ sale.customer_name }}</td>
-          <td>{{ sale.product }}</td>
-          <td>{{ sale.quantity_sold }}</td>
-          <td>{{ sale.product.price }}</td>
-          <td>{{ sale.payment_method }}</td>
-          <td>{{ sale.transport_used }}</td>
-          <td>{{ sale.sales_agent }}</td>
-          <td>{{ sale.date_of_sale|date:"Y-m-d" }}</td>
-          <td>{{ sale.total_amount }}</td>
-          <td class="actions">
-            <a href="{% url 'salesview' sale.id %}" class="view"><i class='bx bx-show'></i> View</a>
-            <a href="{% url 'salesedit' sale.id %}" class="edit"><i class='bx bx-edit'></i> Edit</a>
-            <a href="{% url 'sales_delete' sale.id %}" class="delete"><i class='bx bx-trash'></i> Delete</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="10" style="text-align:center; padding: 20px; color: #6b7280;">No sales records found.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" />
+      </div>
+      <h2>MANAGER'S DASHBOARD</h2>
+      <nav>
+        <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>Home</a>
+        <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>Sales</a>
+        <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>Stock</a>
+        <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>User</a>
+        <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>Logout</a>
+      </nav>
+    </aside>
 
-    <!-- Buttons below the table -->
-    <div class="button-row">
-      <a href="{% url 'dashboard' %}" class="back-button"><i class='bx bx-arrow-back'></i> Back</a>
-      <a href="{% url 'add_sales' %}" class="add-button">Add Sales</a>
-    </div>
+    <!-- Main content -->
+    <main>
+      <h1>Sales Records</h1>
 
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Payment</th>
+              <th>Transport</th>
+              <th>Agent</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sale in sales %}
+            <tr>
+              <td>{{ sale.customer_name }}</td>
+              <td>{{ sale.product }}</td>
+              <td>{{ sale.quantity_sold }}</td>
+              <td>{{ sale.product.price }}</td>
+              <td>{{ sale.payment_method }}</td>
+              <td>{{ sale.transport_used }}</td>
+              <td>{{ sale.sales_agent }}</td>
+              <td>{{ sale.date_of_sale|date:"Y-m-d" }}</td>
+              <td>{{ sale.total_amount }}</td>
+              <td class="actions">
+                <a href="{% url 'salesview' sale.id %}" class="view"><i class='bx bx-show'></i></a>
+                <a href="{% url 'salesedit' sale.id %}" class="edit"><i class='bx bx-edit'></i></a>
+                <a href="{% url 'sales_delete' sale.id %}" class="delete"><i class='bx bx-trash'></i></a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="10" style="text-align:center; padding: 20px; color: #6b7280;">No sales records found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!--  Buttons placed under table -->
+      <div class="button-row">
+        
+        <a href="{% url 'add_sales' %}" class="add-button">Add Sales</a>
+      </div>
+    </main>
   </div>
 
+  <!-- Footer -->
   <footer>
-    &copy; 2025 Amarorwot Naomi | All Rights Reserved.
+    <p>&copy; 2025 Amarorwot Naomi | All Rights Reserved.</p>
   </footer>
 
 </body>

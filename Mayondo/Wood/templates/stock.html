@@ -8,22 +8,22 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
-  <!-- Navigation Bar -->
+  {% comment %} <!-- Navigation Bar -->
   <nav class="bg-gray-800 text-white py-4 px-6 flex items-center justify-between shadow-md">
     <a class="font-bold text-2xl tracking-tight" href="#">MAYONDO WOOD AND FUNITURE</a>
     <div class="flex items-center space-x-3">
       <a class="text-sm px-4 py-2 rounded-full hover:bg-gray-700 transition" href="{% url 'stock_list' %}">Stock List</a>
     </div>
-  </nav>
+  </nav> {% endcomment %}
 
   <!-- Header -->
   <header class="text-center my-8">
-    <h1 class="text-3xl font-serif italic text-gray-800">Add Stock</h1>
+    <h1 class="text-3xl font-serif italic text-gray-800"><u><b>Add Stock</b></u></h1>
   </header>
 
   <!-- Add Stock Form -->
   <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6">
-    <form action="{% url 'addStock' %}" method="post">
+    <form action="{% url 'addStock' %}" method="post" novalidate>
       {% csrf_token %}
       <div class="mb-4">
         <label class="text-gray-500 text-sm" for="product_name">Product Name</label>
@@ -114,34 +114,14 @@
             class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
         </div>
-        <div>
-          <label class="text-gray-500 text-sm" for="color">Color</label>
-          <input
-            type="text"
-            id="color"
-            name="color"
-            class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-        </div>
-      </div>
-
-      <div class="mb-6">
-        <label class="text-gray-500 text-sm" for="measurements">Measurements</label>
-        <input
-          type="text"
-          id="measurements"
-          name="measurements"
-          class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-      </div>
-
+      
       <!-- Buttons -->
       <div class="flex justify-between">
         <a href="{% url 'stock_list' %}" class="px-6 py-2 bg-gray-400 text-white rounded-md shadow hover:bg-gray-500 transition">
           Cancel
         </a>
         <button type="submit" class="px-6 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 transition">
-          Add Stock
+          Submit
         </button>
       </div>
 

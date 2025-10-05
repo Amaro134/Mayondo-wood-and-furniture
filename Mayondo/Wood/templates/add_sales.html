@@ -159,7 +159,7 @@
     <!-- Sales Form -->
     <div class="stock-container">
       <h3>SALES FORM</h3>
-      <form action="{% url 'add_sales' %}" method="post">
+      <form action="{% url 'add_sales' %}" method="post" novalidate>
         {% csrf_token %}
         <div class="form-grid">
           <div class="form-group">

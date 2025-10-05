@@ -20,7 +20,7 @@
     /* Sidebar */
     aside {
         width: 180px;
-        background-color: navy;
+        background-color: black;
         color: white;
         display: flex;
         flex-direction: column;
@@ -97,7 +97,7 @@
     }
 
     th {
-        background-color: navy;
+        background-color: black;
         color: white;
     }
 
@@ -149,23 +149,27 @@
         border-radius: 8px;
         cursor: pointer;
         text-decoration: none;
-        background-color: #2563eb;
+        background-color: black;
         color: white;
         transition: background 0.3s ease;
     }
 
     .btn-container a:hover {
-        background-color: #1d4ed8;
+        background-color: gray;
     }
 
     /* Footer styling */
-    footer {
-        background-color: black;
-        color: white;
-        text-align: center;
-        padding: 15px 20px;
-        margin-top: auto; /* push footer to bottom */
-    }
+   footer {
+    background-color: #1f2937;
+    color: white;
+    text-align: center;
+    padding: 4px 0;
+    margin-top: auto;
+    font-size: 0.9rem;
+    margin-left: 200px; /* push footer to the right, same as main content */
+}
+
+
 </style>
 </head>
 <body>
@@ -227,7 +231,6 @@
 
         <!-- Bottom buttons -->
         <div class="btn-container">
-            <a href="{% url 'dashboard'%}"><i class='bx bx-arrow-back mr-2'></i>Back</a>
             <a href="{% url 'add_user'%}">Add User</a>
         </div>
     </div>
