@@ -56,8 +56,48 @@
     }
     .logo {
       height: 100px;
-      width: 120px;
+      width: 100px;
     }
+     .dropdown > a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .dropdown > a:hover {
+      background-color: #1f2937;
+      color: #9ca3af;
+    }
+
+    .dropdown-content {
+      display: none;
+      flex-direction: column;
+      background-color: black;
+      border-radius: 4px;
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+
+    .dropdown-content a {
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #1f2937;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: flex;
+    }
+
     .card-row {
       display: flex;
       justify-content: space-between;
@@ -156,19 +196,27 @@
     
     <!-- Sidebar -->
     <aside>
-      <div class="logo">
-        <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" />
+        <div class="logo">
+            <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
+        </div>
+        <h2><i>MANAGER'S DASHBOARD</i></h2>
+        <nav>
+            <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
+            <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
+            <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
+            <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
+            <div class="dropdown">
+          <i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
+        <div class="dropdown-content">
+        <a href="{% url 'summary_report' %}">SUMMARY REPORT</a>
+        <a href="{% url 'stock_report' %}">STOCK REPORT</a>
+        <a href="{% url 'sales_report' %}">SALES REPORT</a>
       </div>
-      <br />
-      <h2>MANAGER'S DASHBOARD</h2>
-      <nav>
-        <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>Home</a>
-        <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>Sales</a>
-        <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>Stock</a>
-        <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>User</a>
-        <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>Logout</a>
-      </nav>
-    </aside>
+    </div>
+            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+
+        </nav>
+    </aside> 
 
     <!-- Main Content -->
     <main class="flex-1 p-4 flex flex-col">
@@ -210,7 +258,7 @@
               <td>{{ sale.customer_name }}</td>
               <td>{{ sale.product }}</td>
               <td>{{ sale.quantity_sold }}</td>
-              <td>{{ sale.product.price }}</td>
+              <td>{{ sale.product_price }}</td>
               <td>{{ sale.total_amount }}</td>
               <td>{{ sale.date_of_sale|date:"Y-m-d" }}</td>
               <td>

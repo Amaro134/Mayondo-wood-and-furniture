@@ -9,7 +9,8 @@
 <style>
     /* Body as flex column to keep footer at bottom */
     body {
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-family: Arial, sans-serif;
+          sans-serif;
         background-color: #f9f9f9;
         margin: 0;
         display: flex;
@@ -24,7 +25,7 @@
         color: white;
         display: flex;
         flex-direction: column;
-        padding: 20px;
+        padding: 30px;
         height: 100vh;
         position: fixed;
         left: 0;
@@ -64,6 +65,45 @@
 
     nav a:hover {
         background-color: #4a5568;
+    }
+    .dropdown > a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .dropdown > a:hover {
+      background-color: #1f2937;
+      color: #9ca3af;
+    }
+
+    .dropdown-content {
+      display: none;
+      flex-direction: column;
+      background-color: black;
+      border-radius: 4px;
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+
+    .dropdown-content a {
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #1f2937;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: flex;
     }
 
     /* Main content */
@@ -180,12 +220,19 @@
         </div>
         <h2><i>MANAGER'S DASHBOARD</i></h2>
         <nav>
-            <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>Home</a>
-            <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>Sales</a>
-            
-            <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>Stock</a>
-            <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>User</a>
-            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>Logout</a>
+            <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
+            <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
+            <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
+            <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
+              <div class="dropdown">
+          <i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
+        <div class="dropdown-content">
+        <a href="{% url 'summary_report' %}">SUMMARY REPORT</a>
+        <a href="{% url 'stock_report' %}">STOCK REPORT</a>
+        <a href="{% url 'sales_report' %}">SALES REPORT</a>
+      </div>
+    </div>
+            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
 
         </nav>
     </aside> 
@@ -202,7 +249,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Employee Name</th>
                     <th>Email</th>
                     <th>Role</th>
                     <th>Password</th>
@@ -212,7 +259,7 @@
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <td>{{ user.name }}</td>
+                    <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
                     <td>{{ user.password }}</td>
@@ -231,7 +278,7 @@
 
         <!-- Bottom buttons -->
         <div class="btn-container">
-            <a href="{% url 'add_user'%}">Add User</a>
+            <a href="{% url 'add_user'%}">Add Employee</a>
         </div>
     </div>
 

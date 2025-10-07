@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales & Stock Summary</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f3f4f6;
+    }
+
+    .layout { display: flex; flex: 1; }
+
+    aside {
+      width: 160px;
+      background-color: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 30px;
+      height: 100vh;
+      position: fixed;
+    }
+
+    aside .logo img {
+      max-width: 100px;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+
+    aside h2 {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+      font-style: italic;
+      color: white;
+    }
+
+    aside nav a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    aside nav a:hover { background-color: #1f2937; }
+     /* Dropdown container */
+.dropdown {
+  position: relative;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  left: 100%; /* aligns right next to sidebar menu if needed */
+  top: 0;
+  background-color: black;
+  min-width: 160px;
+  z-index: 1;
+  flex-direction: column;
+  border-radius: 4px;
+  padding: 5px 0;
+}
+
+/* Dropdown links styling */
+.dropdown-content a {
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  display: block;
+  font-weight: 500;
+}
+
+.dropdown-content a:hover {
+  background-color: #1f2937;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+
+    main {
+      flex: 1;
+      padding: 20px;
+      margin-left: 200px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #1f2937;
+      margin-bottom: 20px;
+    }
+
+    .totals {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .totals p {
+      background: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      font-weight: bold;
+      min-width: 180px;
+      text-align: center;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      color: #1f2937;
+    }
+
+    .table-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    table {
+      width: 90%;
+      max-width: 1000px;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    thead { background-color: black; color: white; }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody tr:nth-child(even) { background-color: #f9fafb; }
+    tbody tr:hover { background-color: #dbeafe; }
+     .print-btn {
+    padding: 10px 20px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.print-btn:hover {
+    background: gray;
+}
+
+    footer {
+      background-color: #1f2937;
+      color: white;
+      text-align: center;
+      padding: 8px 0;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar -->
+   <aside>
+        <div class="logo">
+            <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
+        </div>
+        <h2><i>MANAGER'S DASHBOARD</i></h2>
+        <nav>
+            <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
+            <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
+            <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
+            <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
+            <div class="dropdown">
+          <i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
+        <div class="dropdown-content">
+        <a href="{% url 'summary_report' %}">SUMMARY REPORT</a>
+        <a href="{% url 'stock_report' %}">STOCK REPORT</a>
+        <a href="{% url 'sales_report' %}">SALES REPORT</a>
+      </div>
+    </div>
+            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+
+        </nav>
+    </aside> 
+
+  <!-- Main Content -->
+  <main>
+    <h1>Sales & Stock Summary Report</h1>
+
+    <div class="totals">
+      <p>Total Stock: {{ total_stock }}</p>
+      <p>Total Sales: {{ total_sales }}</p>
+      <p>Remaining Stock: {{ remaining_stock }}</p>
+      <p>Total Revenue: ${{ total_revenue }}</p>
+    </div>
+
+    <h2>Product Summary</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity in Stock</th>
+            <th>Sold</th>
+            <th>Remaining</th>
+            <th>Unit Price</th>
+            <th>Total Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in product_summary %}
+          <tr>
+            <td>{{ p.product_name }}</td>
+            <td>{{ p.quantity }}</td>
+            <td>{{ p.total_sold|default:0 }}</td>
+            <td>{{ p.remaining|default:0 }}</td>
+            <td>${{ p.unit_price }}</td>
+            <td>${{ p.total_value }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="text-align:center;">No products found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+       <script>
+function printReport() {
+    window.print();
+}
+</script>
+<div class="btn-container">
+    <button onclick="printReport()" class="print-btn">🖨 Print Report</button>
+</div>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <p>&copy; 2025 Amarorwot Naomi | All Rights Reserved.</p>
+</footer>
+</body>
+</html>

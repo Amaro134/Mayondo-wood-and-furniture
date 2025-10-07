@@ -13,10 +13,9 @@
       margin: 0;
       display: flex;
       flex-direction: column;
-      min-height: 100vh; /* ✅ allows footer to stick at bottom */
+      min-height: 100vh;
     }
 
-    /* Layout wrapper */
     .layout {
       display: flex;
       flex: 1;
@@ -24,7 +23,7 @@
 
     /* Sidebar */
     .sidebar {
-      width: 200px;
+      width: 160px;
       background-color: black;
       color: white;
       display: flex;
@@ -32,19 +31,26 @@
       padding: 20px;
     }
 
-    .sidebar .logo img {
-      max-width: 100px;
-      height: auto;
-      display: block;
-      margin: 0 auto 20px auto;
+    /* Centered logo + heading */
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 30px;
     }
 
-    .sidebar h2 {
-      font-size: 20px;
+    .sidebar-header img {
+      max-width: 100px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-header h2 {
+      font-size: 18px;
       font-weight: bold;
-      margin-bottom: 20px;
       font-style: italic;
-      text-align: center;
+      margin: 0;
     }
 
     .sidebar nav a {
@@ -62,6 +68,51 @@
     .sidebar nav a:hover {
       background-color: #1f2937;
       color: #9ca3af;
+    }
+
+    /* Dropdown styling */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown > a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .dropdown > a:hover {
+      background-color: #1f2937;
+      color: #9ca3af;
+    }
+
+    .dropdown-content {
+      display: none;
+      flex-direction: column;
+      background-color: black;
+      border-radius: 4px;
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+
+    .dropdown-content a {
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #1f2937;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: flex;
     }
 
     /* Main content */
@@ -134,7 +185,7 @@
 
     .button-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       margin-top: 20px;
     }
 
@@ -149,13 +200,6 @@
       gap: 5px;
     }
 
-    .back-button {
-      background-color: #6b7280;
-    }
-    .back-button:hover {
-      background-color: #4b5563;
-    }
-
     .add-button {
       background-color: black;
     }
@@ -163,13 +207,12 @@
       background-color: gray;
     }
 
-    /* Footer */
     footer {
       background-color: #1f2937;
       color: white;
       text-align: center;
       padding: 4px 0;
-      margin-top: auto; /* sticks footer to bottom */
+      margin-top: auto;
     }
   </style>
 </head>
@@ -179,16 +222,27 @@
 
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="logo">
-        <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" />
+      <div class="sidebar-header">
+        <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
+        <h2>MANAGER'S DASHBOARD</h2>
       </div>
-      <h2>MANAGER'S DASHBOARD</h2>
+
       <nav>
-        <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>Home</a>
-        <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>Sales</a>
-        <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>Stock</a>
-        <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>User</a>
-        <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>Logout</a>
+        <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
+        <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
+        <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
+        <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
+
+        <div class="dropdown">
+          <a href="#"><i class='bx bx-bar-chart'></i>REPORTS<i class='bx bx-chevron-down'></i></a>
+          <div class="dropdown-content">
+            <a href="{% url 'summary_report' %}">SUMMARY REPORT</a>
+            <a href="{% url 'stock_report' %}">STOCK REPORT</a>
+            <a href="{% url 'sales_report' %}">SALES REPORT</a>
+          </div>
+        </div>
+
+        <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
       </nav>
     </aside>
 
@@ -203,7 +257,7 @@
               <th>Customer</th>
               <th>Product</th>
               <th>Quantity</th>
-              <th>Price</th>
+              <th>Product Price</th>
               <th>Payment</th>
               <th>Transport</th>
               <th>Agent</th>
@@ -218,7 +272,7 @@
               <td>{{ sale.customer_name }}</td>
               <td>{{ sale.product }}</td>
               <td>{{ sale.quantity_sold }}</td>
-              <td>{{ sale.product.price }}</td>
+              <td>{{ sale.product_price }}</td>
               <td>{{ sale.payment_method }}</td>
               <td>{{ sale.transport_used }}</td>
               <td>{{ sale.sales_agent }}</td>
@@ -228,6 +282,8 @@
                 <a href="{% url 'salesview' sale.id %}" class="view"><i class='bx bx-show'></i></a>
                 <a href="{% url 'salesedit' sale.id %}" class="edit"><i class='bx bx-edit'></i></a>
                 <a href="{% url 'sales_delete' sale.id %}" class="delete"><i class='bx bx-trash'></i></a>
+                <a href="{% url 'salesreceipt' sale.id %}" class="view"><i class='bx bx-receipt'></i></a>
+
               </td>
             </tr>
             {% empty %}
@@ -239,15 +295,12 @@
         </table>
       </div>
 
-      <!--  Buttons placed under table -->
       <div class="button-row">
-        
         <a href="{% url 'add_sales' %}" class="add-button">Add Sales</a>
       </div>
     </main>
   </div>
 
-  <!-- Footer -->
   <footer>
     <p>&copy; 2025 Amarorwot Naomi | All Rights Reserved.</p>
   </footer>

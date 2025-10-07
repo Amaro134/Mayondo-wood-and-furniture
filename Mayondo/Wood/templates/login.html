@@ -5,6 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Page</title>
+
+  <!-- Boxicons for eye icon -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
   <style>
     /* Reset */
     * {
@@ -21,6 +25,9 @@
     body {
       position: relative;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     /* Background image */
@@ -71,7 +78,7 @@
 
     .login-container input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 10px 40px 10px 12px; /* Add space for eye icon */
       margin-bottom: 18px;
       border: 1px solid #ccc;
       border-radius: 8px;
@@ -82,6 +89,24 @@
     .login-container input:focus {
       outline: none;
       border: 1px solid #1e3c72;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #555;
+      font-size: 18px;
+    }
+
+    .toggle-password:hover {
+      color: #1e3c72;
     }
 
     .login-container button {
@@ -105,14 +130,6 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Center login container */
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
   </style>
 </head>
 <body>
@@ -121,25 +138,37 @@
     <h2>Welcome Back</h2>
     <p><i>Login to access your dashboard</i></p>
 
-    <form action="/submit" method="post">
+    <form method="post">
       {% csrf_token %}
-      {% comment %} <label for="username">Username</label>
-      <input type="text" id="username" name="username" required> {% endcomment %}
 
       <label for="email">Email</label>
       <input type="email" id="email" name="email" required>
 
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" required>
+      <div class="password-wrapper">
+        <input type="password" id="password" name="password" required>
+        <i class='bx bx-show toggle-password' id="togglePassword"></i>
+      </div>
 
       <div class="flex justify-center">
-        <a href="{% url 'dashboard' %}">
-          <button type="button" class="mt-6 flex items-center justify-center px-8 py-3 text-base font-normal text-white bg-teal-400 border border-transparent rounded-full text-md hover:bg-teal-300 md:py-4 md:text-2xl md:px-10">
-            login
-          </button>
-        </a>
+        <button type="submit" class="mt-6 flex items-center justify-center px-8 py-3 text-base font-normal text-white bg-teal-400 border border-transparent rounded-full text-md hover:bg-teal-300 md:py-4 md:text-2xl md:px-10">
+          Login
+        </button>
       </div>
     </form>
   </div>
+
+  <script>
+    const togglePassword = document.getElementById("togglePassword");
+    const password = document.getElementById("password");
+
+    togglePassword.addEventListener("click", function () {
+      const type = password.getAttribute("type") === "password" ? "text" : "password";
+      password.setAttribute("type", type);
+
+      this.classList.toggle("bx-show");
+      this.classList.toggle("bx-hide");
+    });
+  </script>
 </body>
 </html>

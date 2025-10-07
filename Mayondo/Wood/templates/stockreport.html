@@ -1,0 +1,272 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Report</title>
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f3f4f6;
+  }
+
+  .layout { display: flex; flex: 1; }
+
+  /* Sidebar */
+  aside {
+    width: 160px;
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+  }
+
+  aside .logo img {
+    max-width: 100px;
+    margin: 0 auto 20px auto;
+
+  }
+
+  aside h2 {
+    text-align: center;
+    font-style: italic;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  aside nav a {
+    color: white;
+    text-decoration: none;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  aside nav a:hover {
+    background-color: #1f2937;
+  }
+
+  /* Dropdown */
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown > a {
+    cursor: pointer;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    background-color: black;
+    min-width: 160px;
+    z-index: 1;
+    flex-direction: column;
+    border-radius: 4px;
+    padding: 5px 0;
+  }
+
+  .dropdown-content a {
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    font-weight: 500;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #1f2937;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: flex;
+  }
+
+  /* Main */
+  main {
+    flex: 1;
+    margin-left: 200px;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #1f2937;
+  }
+
+  .summary {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    gap: 10px;
+  }
+
+  .summary-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    flex: 1 1 250px;
+    text-align: center;
+  }
+
+  .summary-card h3 {
+    color: #374151;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+
+  .summary-card p {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  thead {
+    background-color: black;
+    color: white;
+  }
+
+  th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+  }
+
+  tbody tr:hover {
+    background-color: #e0f2fe;
+  }
+   .print-btn {
+    padding: 10px 20px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.print-btn:hover {
+    background: gray;
+}
+
+  footer {
+    background-color: #1f2937;
+    color: white;
+    text-align: center;
+    padding: 4px 0;
+    margin-top: auto;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside>
+    <div class="logo">
+      <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
+    </div>
+    <h2>MANAGER'S DASHBOARD</h2>
+
+    <nav>
+      <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
+      <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
+      <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
+      <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
+
+      <div class="dropdown">
+        <a href="#"><i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
+        <div class="dropdown-content">
+          <a href="{% url 'summary_report' %}">Summary Report</a>
+          <a href="{% url 'stock_report' %}">Stock Report</a>
+          <a href="{% url 'sales_report' %}">Sales Report</a>
+        </div>
+      </div>
+
+      <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main>
+    <h1>Stock Report</h1>
+
+    <div class="summary">
+      <div class="summary-card"><h3>Total Products</h3><p>{{ total_products }}</p></div>
+      <div class="summary-card"><h3>Total Quantity</h3><p>{{ total_quantity }}</p></div>
+      <div class="summary-card"><h3>Total Stock Value</h3><p>${{ total_value }}</p></div>
+      <div class="summary-card"><h3>Low Stock Items</h3><p>{{ low_stock_count }}</p></div>
+    </div>
+
+    <h2 style="text-align:center;">Inventory Summary</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Type</th>
+          <th>Quantity</th>
+          <th>Cost</th>
+          <th>Selling Price</th>
+          <th>Supplier</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in stocks %}
+        <tr>
+          <td>{{ item.product_name }}</td>
+          <td>{{ item.type_of_product }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ item.costprice }}</td>
+          <td>${{ item.selling_price }}</td>
+          <td>{{ item.supplier_name }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center;">No stock records available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+     <script>
+function printReport() {
+    window.print();
+}
+</script>
+<div class="btn-container">
+    <button onclick="printReport()" class="print-btn">🖨 Print Report</button>
+</div>
+  </main>
+</div>
+
+<footer>
+  <p>&copy; 2025 Amarorwot Naomi | All Rights Reserved.</p>
+</footer>
+</body>
+</html>

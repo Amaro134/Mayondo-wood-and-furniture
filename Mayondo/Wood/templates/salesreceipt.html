@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Receipt</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .receipt-box {
+      background: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 450px;
+      margin: 40px auto;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-top: 8px solid black;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .details p {
+      margin: 8px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .details strong {
+      display: inline-block;
+      width: 130px;
+      color: #333;
+    }
+
+    .total {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 20px;
+      color: black;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    .receipt-header {
+      border-bottom: 2px dashed #eee;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .receipt-box p {
+      line-height: 1.5;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .print-btn,
+    .back-btn {
+      padding: 10px 20px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+      transition: background 0.3s ease;
+    }
+
+    .print-btn:hover,
+    .back-btn:hover {
+      background: gray;
+    }
+
+    @media print {
+      body {
+        background: none;
+        margin: 0;
+      }
+      .btn-container {
+        display: none;
+      }
+      .receipt-box {
+        box-shadow: none;
+        border: none;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="receipt-box">
+  <div class="receipt-header">
+    <h2>Mayondo Wood & Furniture</h2>
+  </div>
+
+  <p><strong>Receipt No:</strong> {{ sale.id|stringformat:"03d" }}</p>
+  <p><strong>Date:</strong> {{ sale.date_of_sale|date:"d/m/Y" }}</p>
+
+  <div class="details">
+    <p><strong>Customer:</strong> {{ sale.customer_name }}</p>
+    <p><strong>Product:</strong> {{ sale.product_name }}</p>
+    <p><strong>Quantity:</strong> {{ sale.quantity_sold }}</p>
+    <p><strong>Unit Price:</strong> {{ sale.product_price|floatformat:0 }} UGX</p>
+    <p><strong>Payment:</strong> {{ sale.payment_method }}</p>
+    <p><strong>Sales Agent:</strong> {{ sale.sales_agent }}</p>
+    <p><strong>Transport:</strong> {% if sale.transport_used %}Yes ({{ sale.transport_fee|floatformat:2 }} UGX added){% else %}No{% endif %}</p>
+  </div>
+
+  <p class="total">Total: {{ sale.total_amount|floatformat:2 }} UGX</p>
+</div>
+
+<div class="btn-container">
+  <button onclick="printReport()" class="print-btn">🖨 Print Report</button>
+  <a href="{% url 'sales_list' %}">
+    <button class="back-btn">⬅ Back</button>
+  </a>
+</div>
+
+<div class="footer">
+  <p>Thank you for choosing Mayondo Wood and Furniture!</p>
+</div>
+
+<script>
+function printReport() {
+  window.print();
+}
+</script>
+
+</body>
+</html>

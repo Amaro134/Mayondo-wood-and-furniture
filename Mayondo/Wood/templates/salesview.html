@@ -11,18 +11,25 @@
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
   <!-- Sidebar -->
-  <aside class="w-56 bg-blue-900 text-white flex flex-col p-6 fixed top-0 left-0 h-screen shadow-md">
+  <aside class="w-56 bg-black text-white flex flex-col p-6 fixed top-0 left-0 h-screen shadow-md">
 
     <div class="logo mb-4">
       <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" class="w-32 mx-auto">
     </div>
     <h2 class="text-lg font-bold italic mb-6 text-center">DASHBOARD</h2>
     <nav class="flex flex-col gap-3">
-      <a href="{% url 'dashboard' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-home'></i>Home</a>
-      <a href="{% url 'add_sales' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-credit-card'></i>Sales</a>
-      <a href="{% url 'stock_list' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-store-alt'></i>Stock</a>
-      <a href="{% url 'user_list' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-user-circle'></i>User</a>
-      <a href="{% url 'logout' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-log-out'></i>Logout</a>
+      <a href="{% url 'dashboard' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-home'></i>DASHBOARD</a>
+      <a href="{% url 'add_sales' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-credit-card'></i>SALES</a>
+      <a href="{% url 'stock_list' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-store-alt'></i>STOCK</a>
+      <a href="{% url 'user_list' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-user-circle'></i>EMPLOYEES</a>
+        <div class="dropdown">
+          <a href="summary_report"><i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
+        <div class="dropdown-content">
+        <a href="{% url 'stock_report' %}">Stock Report</a>
+        <a href="{% url 'sales_report' %}">Sales Report</a>
+      </div>
+    </div>
+      <a href="{% url 'logout' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-log-out'></i>LOGOUT</a>
     </nav>
   </aside>
 
@@ -31,7 +38,7 @@
 
     <!-- Main Content -->
     <main class="flex-1 p-8">
-      <h1 class="text-3xl font-serif italic text-gray-800 text-center mb-4">Sale Details</h1>
+      <h1 class="text-3xl font-serif italic text-gray-800 text-center mb-4"><b>SALES DETAILS</b></h1>
       <div class="flex justify-center mb-6">
         <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo" class="w-32">
       </div>
@@ -82,7 +89,7 @@
 
         <!-- Buttons -->
         <div class="flex justify-between mt-8">
-          <a href="{% url 'add_sales' %}" class="px-6 py-2 bg-gray-500 text-white rounded-md shadow hover:bg-gray-600 transition">Back</a>
+          <a href="{% url 'sales_list' %}" class="px-6 py-2 bg-gray-500 text-white rounded-md shadow hover:bg-gray-600 transition">Back</a>
           <a href="{% url 'salesedit' selected_sale.id %}" class="px-6 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition">Edit</a>
         </div>
       </div>

@@ -27,11 +27,10 @@ urlpatterns = [
     # Stock routes
     path('addStock/', views.addStock, name='addStock'),  # shows stock form & handles submit
     path('stock/', views.stock_list, name='stock_list'),
-   path('stockedit/<int:id>/', views.stockedit, name='stockedit'),# lists all
+    path('stockedit/<int:id>/', views.stockedit, name='stockedit'),# lists all
     path('stockview/<int:id>/', views.stockview, name='stockview'),
     path('stockdelete/<int:id>/', views.stockdelete, name='stockdelete'),  # delete stock
-    path('stockupdate/<int:id>/', views.stockupdate, name='stockupdate'),
-    # Sales routes
+    
     path("add_sales/", views.add_sales, name="add_sales"),   # shows sales form & handles submit
     path("sales_list/", views.sales_list, name="sales_list"),# view one stock item
     path('salesedit/<int:id>/', views.salesedit, name='salesedit'),  # edit sales
@@ -49,4 +48,12 @@ urlpatterns = [
     path('user_delete/<int:id>/', views.user_delete, name='user_delete'),  # delete user
     path('user_view/<int:id>/', views.user_view, name='user_view'),  # view user details
     path('logout/', views.logout, name='logout'),  # logout user
+    #   Report
+    path('reports/', views.report_dashboard, name='report_dashboard'),
+    path('sales_report/', views.sales_report, name='sales_report'),
+    path('stock_report/', views.stock_report, name='stock_report'),
+    path('summary_report/', views.summary_report, name='summary_report'),
+    path('salesreceipt/<int:sale_id>/', views.salesreceipt, name='salesreceipt')
+
 ]
+

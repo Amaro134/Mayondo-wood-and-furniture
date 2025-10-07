@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +39,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
-      gap: 15px; /* equal spacing between inputs */
+      gap: 15px;
     }
 
     label {
@@ -52,7 +53,7 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 14px;
-      box-sizing: border-box; /* ensures padding doesn't break width */
+      box-sizing: border-box;
     }
 
     .btn-container {
@@ -95,9 +96,31 @@
       background-color: #1d4ed8;
     }
 
+    .messages {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 10px;
+    }
+
+    .messages li {
+      padding: 8px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+    }
+
+    .messages li.error {
+      background-color: #ffe5e5;
+      color: #b91c1c;
+    }
+
+    .messages li.success {
+      background-color: #e7f9ed;
+      color: #065f46;
+    }
+
     footer {
-      background-color: #1f2937; /* dark gray */
-      color: white; /* text visible */
+      background-color: #1f2937;
+      color: white;
       text-align: center;
       padding: 15px 0;
     }
@@ -105,13 +128,22 @@
 </head>
 <body>
   <main>
-    <form action="" method="post" novalidate>
+    <form action="{% url 'adduser' %}" method="post" novalidate>
       {% csrf_token %}
-      <h1>Add New User</h1>
+      <h1>Add New Employee</h1>
       <p>Fill in the details below to create a new user account.</p>
 
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" placeholder="Enter full name" required>
+      <!-- ✅ Message display section -->
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <label for="username">Employee name</label>
+      <input type="text" id="username" name="username" placeholder="Enter full username" required>
 
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="Enter email address" required>
@@ -128,7 +160,7 @@
       <input type="password" id="password" name="password" placeholder="Enter password" required>
 
       <div class="btn-container">
-        <a href="{% url 'dashboard' %}"><i class='bx bx-arrow-back mr-2'></i> Back</a>
+        <a href="{% url 'dashboard' %}"><i class='bx bx-arrow-back'></i> Back</a>
         <button type="submit">Save User</button>
       </div>
     </form>
