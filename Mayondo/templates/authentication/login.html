@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Mayondo Wood and Furniture{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'images/341cf1a6-f721-4ec5-a355-54af1c4a60af.jpg' %}") no-repeat center center/cover;
+        z-index: -1;
+    }
+
+    .login-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px 35px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        width: 400px;
+        max-width: 90vw;
+        backdrop-filter: blur(10px);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #4CAF50;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mt-3 {
+        margin-top: 1rem;
+    }
+
+    .text-link {
+        color: #4CAF50;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .text-link:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="text-center mb-8">
+        <img src="{% static 'images/2.png' %}" alt="Mayondo Logo" class="mx-auto mb-4" style="height: 80px; width: 80px;">
+        <h2 class="text-2xl font-bold text-gray-800">Welcome Back</h2>
+        <p class="text-gray-600">Sign in to your account</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <input type="text" 
+                   name="username" 
+                   class="form-control" 
+                   placeholder="Username"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <input type="password" 
+                   name="password" 
+                   class="form-control" 
+                   placeholder="Password"
+                   required>
+        </div>
+
+        <button type="submit" class="btn-primary">
+            <i class="bx bx-log-in mr-2"></i>Sign In
+        </button>
+    </form>
+
+    <div class="text-center mt-3">
+        <p class="text-gray-600">
+            Don't have an account? 
+            <a href="{% url 'authentication:register' %}" class="text-link">Register here</a>
+        </p>
+        <p class="mt-2">
+            <a href="{% url 'authentication:landing_page' %}" class="text-link">
+                <i class="bx bx-arrow-back mr-1"></i>Back to Home
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}
