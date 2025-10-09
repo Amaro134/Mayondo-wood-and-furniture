@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-12345')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-mayondo-dev-key-not-for-production-use-2024-secure')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # Static files serving
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'authentication.middleware.SessionErrorHandlingMiddleware',  # Custom session error handling
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -146,10 +147,16 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'authentication:landing_page'
 
 # Session settings
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Explicitly use database sessions
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_NAME = 'mayondo_sessionid'  # Custom session cookie name
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep sessions after browser close
+SESSION_SAVE_EVERY_REQUEST = True  # Save session on every request to extend lifetime
+SESSION_COOKIE_PATH = '/'  # Make cookies available for entire site
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'  # Use JSON serializer
 
 # CSRF settings
 CSRF_COOKIE_SECURE = not DEBUG
@@ -172,19 +179,47 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'verbose',
         },
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'session_file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'session.log',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
         'django': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.contrib.sessions': {
+            'handlers': ['session_file', 'console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'authentication': {
             'handlers': ['file', 'console'],
             'level': 'INFO',
             'propagate': True,

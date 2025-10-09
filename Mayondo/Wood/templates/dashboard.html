@@ -213,7 +213,7 @@
         <a href="{% url 'sales_report' %}">SALES REPORT</a>
       </div>
     </div>
-            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+            <a href="{% url 'authentication:logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
 
         </nav>
     </aside> 
@@ -306,9 +306,9 @@
               <td>{{ stock.date_added|date:'Y-m-d' }}</td>
               <td>
                 <div class="action-buttons">
-                  <a href="/stockview/{{stock.id}}" class="view"><i class='bx bx-show'></i></a>
-                  <a href="/stockedit/{{stock.id}}" class="edit"><i class='bx bx-edit'></i></a>
-                  <a href="/stockdelete/{{stock.id}}" class="delete"><i class='bx bx-trash'></i></a>
+                  <a href="{% url 'stockview' stock.id %}" class="view"><i class='bx bx-show'></i></a>
+                  <a href="{% url 'stockedit' stock.id %}" class="edit"><i class='bx bx-edit'></i></a>
+                  <a href="{% url 'stockdelete' stock.id %}" class="delete"><i class='bx bx-trash'></i></a>
                 </div>
               </td>
             </tr>
