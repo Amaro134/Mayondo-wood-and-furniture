@@ -15,45 +15,59 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from Wood import views   # import views, not models
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-     # Landing page
-    path('', views.landingPage, name="landingPage"),
-    path('login/', views.loginPage, name='login'),  # login page
-    # Stock routes
-    path('addStock/', views.addStock, name='addStock'),  # shows stock form & handles submit
-    path('stock/', views.stock_list, name='stock_list'),
-    path('stockedit/<int:id>/', views.stockedit, name='stockedit'),# lists all
-    path('stockview/<int:id>/', views.stockview, name='stockview'),
-    path('stockdelete/<int:id>/', views.stockdelete, name='stockdelete'),  # delete stock
+    # Authentication routes
+    path('', include('authentication.urls')),
     
-    path("add_sales/", views.add_sales, name="add_sales"),   # shows sales form & handles submit
-    path("sales_list/", views.sales_list, name="sales_list"),# view one stock item
-    path('salesedit/<int:id>/', views.salesedit, name='salesedit'),  # edit sales
-    path('salesdelete/<int:id>/', views.salesdelete, name='sales_delete'),
-    path('salesview/<int:id>/', views.salesview, name='salesview'), 
-    # update sales
-    # path('report/', views.report_view, name='report'),
-    #dashboard
+    # Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
     
-    # User routes
-    path('user_list/', views.user_list, name='user_list'),  # lists all users
-    path('add_user/', views.adduser, name='add_user'),  # shows user
-    path('useredit/<int:id>/', views.user_edit, name='user_edit'),  # edit user
-    path('user_delete/<int:id>/', views.user_delete, name='user_delete'),  # delete user
-    path('user_view/<int:id>/', views.user_view, name='user_view'),  # view user details
-    path('logout/', views.logout, name='logout'),  # logout user
-    #   Report
-    path('reports/', views.report_dashboard, name='report_dashboard'),
-    path('sales_report/', views.sales_report, name='sales_report'),
-    path('stock_report/', views.stock_report, name='stock_report'),
-    path('summary_report/', views.summary_report, name='summary_report'),
-    path('salesreceipt/<int:sale_id>/', views.salesreceipt, name='salesreceipt')
-
+    # Stock management routes
+    path('inventory/', include([
+        path('add/', views.addStock, name='addStock'),
+        path('list/', views.stock_list, name='stock_list'),
+        path('<int:id>/edit/', views.stockedit, name='stockedit'),
+        path('<int:id>/view/', views.stockview, name='stockview'),
+        path('<int:id>/delete/', views.stockdelete, name='stockdelete'),
+    ])),
+    
+    # Sales management routes  
+    path('sales/', include([
+        path('add/', views.add_sales, name="add_sales"),
+        path('list/', views.sales_list, name="sales_list"),
+        path('<int:id>/edit/', views.salesedit, name='salesedit'),
+        path('<int:id>/delete/', views.salesdelete, name='sales_delete'),
+        path('<int:id>/view/', views.salesview, name='salesview'),
+        path('<int:sale_id>/receipt/', views.salesreceipt, name='salesreceipt'),
+    ])),
+    
+    # User management routes
+    path('users/', include([
+        path('list/', views.user_list, name='user_list'),
+        path('add/', views.adduser, name='add_user'),
+        path('<int:id>/edit/', views.user_edit, name='user_edit'),
+        path('<int:id>/delete/', views.user_delete, name='user_delete'),
+        path('<int:id>/view/', views.user_view, name='user_view'),
+    ])),
+    
+    # Reports routes
+    path('reports/', include([
+        path('', views.report_dashboard, name='report_dashboard'),
+        path('sales/', views.sales_report, name='sales_report'),
+        path('stock/', views.stock_report, name='stock_report'),
+        path('summary/', views.summary_report, name='summary_report'),
+    ])),
 ]
+
+# Serve static files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -1,30 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Stock, Sales, Add_user
-from datetime import datetime
-from .forms import Add_userForm, SalesForm, StockForm, Add_userAuthenticationForm
-from .forms import StockForm
-from decimal import Decimal
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
-from django.shortcuts import redirect
 from django.contrib import messages
+from django.db.models import Sum
+from decimal import Decimal, InvalidOperation
+from datetime import datetime
 
-# ---------------- Landing ----------------
-def landingPage(request):
-    return render(request, "index.html")
+from .models import Stock, Sales, Add_user
+from .forms import Add_userForm, SalesForm, StockForm, Add_userAuthenticationForm
 
-def loginPage(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        # Here you would typically validate the username and password
-        # For simplicity, let's assume any non-empty username and password is valid
-        if username and password:
-            return redirect("dashboard")  # Redirect to dashboard on successful login
-        else:
-            return render(request, "login.html", {"error": "Invalid credentials"})
-    return render(request, "login.html")
-
+# NOTE: Landing and login pages moved to authentication app
 
 # ---------------- Stock Views ----------------
 # Show empty stock form
@@ -38,6 +24,7 @@ def loginPage(request):
 #         form = StockForm()
 
 
+@login_required
 def addStock(request):
     if request.method == "POST":
         product_name = request.POST.get("product_name")
@@ -104,11 +91,13 @@ def addStock(request):
     return render(request, "stock.html")
 
 
+@login_required
 def stock_list(request):
     stocks = Stock.objects.all()
     return render(request, "stocklist.html", {"stocks": stocks})
 
 # ---------------- Edit Stock ----------------
+@login_required
 def stockedit(request, id):
     stock = get_object_or_404(Stock, pk=id)
 
@@ -135,10 +124,12 @@ def stockedit(request, id):
 
 
 # View one stock item by ID
+@login_required
 def stockview(request, id):
     stock = get_object_or_404(Stock, id=id)
     return render(request, "stockview.html", {"selected": stock})
 
+@login_required
 def stockdelete(request, id):
     stock = get_object_or_404(Stock, id=id)
     if request.method == "POST":
@@ -147,12 +138,14 @@ def stockdelete(request, id):
     return render(request, "stockdelete.html", {"stock": stock})
  # make sure this matches your URL name
 
+@login_required
 def stockupdate(request, id):
     stock = get_object_or_404(Stock, id=id)
     # Example: maybe you want to show a prefilled form
     return render(request, "stockedit.html", {"stock": stock})
 
 # ---------------- Dashboard ----------------
+@login_required
 def dashboard(request):
     # Get latest 5 stocks and sales
     stocks = Stock.objects.all().order_by('-date_added')[:5]
@@ -180,6 +173,7 @@ def dashboard(request):
 # views.py
 from decimal import Decimal
 
+@login_required
 def add_sales(request):
     if request.method == "POST":
         customer_name = request.POST.get("customer_name")
@@ -237,10 +231,12 @@ def add_sales(request):
 
     return render(request, "add_sales.html")
 # List all sales
+@login_required
 def sales_list(request):
     all_sales = Sales.objects.all()
     return render(request, "sales_list.html", {"sales": all_sales})
 
+@login_required
 def salesedit(request, id):
     try:
         selected = Sales.objects.get(id=id)
@@ -262,6 +258,7 @@ def salesedit(request, id):
         return redirect("sales_list")
     return render(request, "salesedit.html", {"selected": selected})
 
+@login_required
 def salesdelete(request, id):
     sales = get_object_or_404(Sales, id=id)
     
@@ -272,15 +269,18 @@ def salesdelete(request, id):
     # if GET, show confirmation page
     return render(request, "salesdelete.html", {"sales": sales})
 
+@login_required
 def salesview(request, id):
     sale = get_object_or_404(Sales, id=id)
     return render(request, "salesview.html", {"selected_sale": sale})
 #---- receipt-----
+@login_required
 def salesreceipt(request, sale_id):
     sale = get_object_or_404(Sales, id=sale_id)
     return render(request, 'salesreceipt.html', {'sale': sale})
 
 # the adduser views
+@login_required
 def adduser(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -311,10 +311,12 @@ def adduser(request):
 
     return render(request, "add_user.html")
 
+@login_required
 def user_list(request):
     users = Add_user.objects.all()
     return render(request, "user_list.html", {"users": users})
 
+@login_required
 def user_edit(request, id):
     selected = Add_user.objects.get(id=id)
 
@@ -328,14 +330,17 @@ def user_edit(request, id):
 
     return render(request, "user_edit.html", {"selected": selected})
 
+@login_required
 def user_delete(request, id):
     selected = Add_user.objects.get(id=id)
     return render(request, "user_delete.html", {"selected": selected})
 
+@login_required
 def user_view(request, id):
     selected = get_object_or_404(Add_user, id=id)
     return render(request, "user_view.html", {"selected": selected})
 
+@login_required
 def logout(request):
     if request.method == "POST":
         auth_logout(request)  # Logs the user out
@@ -346,6 +351,7 @@ def logout(request):
 from django.db.models import Sum
 
 # Report dashboard – overview page
+@login_required
 def report_dashboard(request):
     total_sales = Sales.objects.aggregate(total=Sum('total_amount'))['total'] or 0
     total_stock = Stock.objects.count()
@@ -357,6 +363,7 @@ def report_dashboard(request):
     })
 
 # Sales report – detailed sales data
+@login_required
 def sales_report(request):
     sales = Sales.objects.all().order_by('-date_of_sale')
     total_sales = sales.aggregate(total=Sum('total_amount'))['total'] or 0
@@ -366,6 +373,7 @@ def sales_report(request):
     })
 
 # Stock report – all stock items and totals
+@login_required
 def stock_report(request):
     stocks = Stock.objects.all().order_by('-date_added')
     total_stock = stocks.aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
@@ -375,6 +383,7 @@ def stock_report(request):
     })
 
 #Combined summary report – sales + stock overview
+@login_required
 def summary_report(request):
     # --- Sales Summary ---
     total_sales_amount = Sales.objects.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
