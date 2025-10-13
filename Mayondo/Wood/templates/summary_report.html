@@ -187,23 +187,27 @@
         <div class="logo">
             <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
         </div>
-        <h2><i>MANAGER'S DASHBOARD</i></h2>
-        <nav>
-            <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
-            <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
-            <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
-            <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
-            <div class="dropdown">
-          <i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
-        <div class="dropdown-content">
-        <a href="{% url 'summary_report' %}">SUMMARY REPORT</a>
+        <h2><i>DASHBOARD</i></h2>
+       <nav>
+  <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
+  <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
+
+  {% if role == "Admin" or role == "Manager" %}
+    <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
+    <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
+
+    <div class="dropdown">
+      <a><i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
+      <div class="dropdown-content">
         <a href="{% url 'stock_report' %}">STOCK REPORT</a>
         <a href="{% url 'sales_report' %}">SALES REPORT</a>
       </div>
     </div>
-            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+  {% endif %}
 
-        </nav>
+  <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+</nav>
+
     </aside> 
 
   <!-- Main Content -->

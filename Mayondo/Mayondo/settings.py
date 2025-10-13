@@ -63,6 +63,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # new template
+                'Wood.context_processors.user_role'
             ],
         },
     },
@@ -131,3 +133,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'Wood.Add_user'
+# Redirect unauthenticated users to this URL
+LOGIN_URL = 'login'           # should match the name in urls.py
+
+# Redirect after successful login
+LOGIN_REDIRECT_URL = 'dashboard'
+
+# Redirect after logout
+LOGOUT_REDIRECT_URL = 'login'
+
+

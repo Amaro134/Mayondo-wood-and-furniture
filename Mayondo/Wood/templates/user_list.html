@@ -4,256 +4,259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User</title>
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<title>Employees | Mayondo Wood & Furniture</title>
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <style>
-    /* Body as flex column to keep footer at bottom */
-    body {
-        font-family: Arial, sans-serif;
-          sans-serif;
-        background-color: #f9f9f9;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
+/* ==== GENERAL PAGE LAYOUT ==== */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-    /* Sidebar */
-    aside {
-        width: 180px;
-        background-color: black;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        padding: 30px;
-        height: 100vh;
-        position: fixed;
-        left: 0;
-        top: 0;
-    }
+/* ==== SIDEBAR ==== */
+aside {
+    width: 200px;
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
 
-    aside .logo img {
-        width: 120px;
-        height: auto;
-        margin-bottom: 15px;
-    }
+aside .logo img {
+    width: 120px;
+    margin-bottom: 15px;
+}
 
-    aside h2 {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 20px;
-        font-style: italic;
-        text-align: left;
-    }
+aside h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-style: italic;
+    text-align: left;
+}
 
-    nav {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-    nav a {
-        color: white;
-        text-decoration: none;
-        padding: 10px;
-        border-radius: 5px;
-        transition: background 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-    nav a:hover {
-        background-color: #4a5568;
-    }
-    .dropdown > a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      text-decoration: none;
-      color: white;
-      padding: 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+nav a:hover {
+    background-color: #4a5568;
+}
 
-    .dropdown > a:hover {
-      background-color: #1f2937;
-      color: #9ca3af;
-    }
+/* ==== DROPDOWN MENU ==== */
+.dropdown {
+    position: relative;
+}
 
-    .dropdown-content {
-      display: none;
-      flex-direction: column;
-      background-color: black;
-      border-radius: 4px;
-      margin-left: 10px;
-      margin-top: 5px;
-    }
+.dropdown > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+}
 
-    .dropdown-content a {
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      display: block;
-    }
+.dropdown > a:hover {
+    background-color: #1f2937;
+}
 
-    .dropdown-content a:hover {
-      background-color: #1f2937;
-    }
+.dropdown-content {
+    display: none;
+    flex-direction: column;
+    background-color: #111;
+    border-radius: 4px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
 
-    .dropdown:hover .dropdown-content {
-      display: flex;
-    }
+.dropdown-content a {
+    color: white;
+    padding: 8px 20px;
+    text-decoration: none;
+}
 
-    /* Main content */
-    .main-content {
-        margin-left: 200px;
-        padding: 20px;
-        flex: 1; /* take remaining space so footer stays at bottom */
-    }
+.dropdown-content a:hover {
+    background-color: #1f2937;
+}
 
-    h1, p {
-        text-align: center;
-        margin: 10px 0;
-        color: #333;
-    }
+.dropdown:hover .dropdown-content {
+    display: flex;
+}
 
-    table {
-        width: 100%;
-        max-width: 1000px;
-        margin: 20px auto;
-        border-collapse: collapse;
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+/* ==== MAIN CONTENT ==== */
+.main-content {
+    margin-left: 220px;
+    padding: 20px;
+    flex: 1;
+}
 
-    th, td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #ddd;
-        text-align: left;
-    }
+h1, p {
+    text-align: center;
+    margin: 10px 0;
+    color: #333;
+}
 
-    th {
-        background-color: black;
-        color: white;
-    }
+table {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
 
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
+th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
 
-    tr:hover {
-        background-color: #e6f7ff;
-    }
+th {
+    background-color: black;
+    color: white;
+}
 
-    /* Action buttons */
-    .action-buttons a {
-        display: inline-block;
-        padding: 6px 12px;
-        margin-right: 5px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 14px;
-        color: white;
-        transition: background 0.3s ease;
-    }
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
 
-    .action-buttons .view { background-color: #10b981; }
-    .action-buttons .view:hover { background-color: #059669; }
+tr:hover {
+    background-color: #e6f7ff;
+}
 
-    .action-buttons .edit { background-color: #3b82f6; }
-    .action-buttons .edit:hover { background-color: #2563eb; }
+/* ==== ACTION BUTTONS ==== */
+.action-buttons a {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 5px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    color: white;
+    transition: background 0.3s ease;
+}
 
-    .action-buttons .delete { background-color: #ef4444; }
-    .action-buttons .delete:hover { background-color: #b91c1c; }
+.action-buttons .view { background-color: #10b981; }
+.action-buttons .view:hover { background-color: #059669; }
 
-    /* Bottom buttons */
-    .btn-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-        gap: 10px;
-    }
+.action-buttons .edit { background-color: #3b82f6; }
+.action-buttons .edit:hover { background-color: #2563eb; }
 
-    .btn-container a {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        text-decoration: none;
-        background-color: black;
-        color: white;
-        transition: background 0.3s ease;
-    }
+.action-buttons .delete { background-color: #ef4444; }
+.action-buttons .delete:hover { background-color: #b91c1c; }
 
-    .btn-container a:hover {
-        background-color: gray;
-    }
+/* ==== ADD EMPLOYEE BUTTON ==== */
+.btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
 
-    /* Footer styling */
-   footer {
+.btn-container a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    transition: background 0.3s ease;
+}
+
+.btn-container a:hover {
+    background-color: gray;
+}
+
+/* ==== FOOTER ==== */
+footer {
     background-color: #1f2937;
     color: white;
     text-align: center;
-    padding: 4px 0;
+    padding: 8px 0;
     margin-top: auto;
     font-size: 0.9rem;
-    margin-left: 200px; /* push footer to the right, same as main content */
+    margin-left: 200px;
 }
-
-
 </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <aside>
         <div class="logo">
-            <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
+            <img src="{% static 'images/2.png' %}" alt="Mayondo Logo">
         </div>
-        <h2><i>MANAGER'S DASHBOARD</i></h2>
-        <nav>
-            <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
-            <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
-            <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
-            <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
-              <div class="dropdown">
-          <i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
-        <div class="dropdown-content">
-        <a href="{% url 'summary_report' %}">SUMMARY REPORT</a>
+        <h2><i>DASHBOARD</i></h2>
+     <nav>
+  <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
+  <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
+
+  {% if user_role in "Admin Manager" %}
+    <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
+    <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
+
+    <div class="dropdown">
+      <a><i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
+      <div class="dropdown-content">
         <a href="{% url 'stock_report' %}">STOCK REPORT</a>
         <a href="{% url 'sales_report' %}">SALES REPORT</a>
       </div>
     </div>
-            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+  {% endif %}
 
-        </nav>
-    </aside> 
+  <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+</nav>
+
+
+    </aside>
 
     <!-- Main content -->
     <div class="main-content">
-        <h1>Welcome to Mayondo Wood and Furniture</h1>
+        <h1>Employee Management</h1>
         <div style="text-align:center;">
-            <img src="{% static 'images/2.png' %}" alt="Stock Image" width="60" height="60">
+            <img src="{% static 'images/2.png' %}" alt="Logo" width="60" height="60">
         </div>
-        <p>Manage our stock efficiently with our user-friendly interface.</p>
+        <p>Manage employee records efficiently with our simple dashboard.</p>
 
-        <!-- User Table -->
+        <!-- Employee Table -->
         <table>
             <thead>
                 <tr>
                     <th>Employee Name</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Password</th>
-                    <th>Action</th>
+                    
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -262,23 +265,26 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
-                    <td>{{ user.password }}</td>
+                   
                     <td>
-                    <div class="action-buttons">
-                        <a href="{% url 'user_view' user.id %}" class="view">View</a>
-                        <a href="{% url 'user_edit' user.id %}" class="edit">Edit</a>
-                        <a href="{% url 'user_delete' user.id %}" class="delete">Delete</a>
-                    </div>
-
+                        <div class="action-buttons">
+                            <a href="{% url 'user_view' user.id %}" class="view">View</a>
+                            <a href="{% url 'user_edit' user.id %}" class="edit">Edit</a>
+                            <a href="{% url 'user_delete' user.id %}" class="delete">Delete</a>
+                        </div>
                     </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center; color: gray;">No employees found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <!-- Bottom buttons -->
+        <!-- Add Employee Button -->
         <div class="btn-container">
-            <a href="{% url 'add_user'%}">Add Employee</a>
+            <a href="{% url 'add_user' %}"><i class="bx bx-user-plus"></i> Add Employee</a>
         </div>
     </div>
 

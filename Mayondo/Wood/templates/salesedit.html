@@ -6,30 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Sale</title>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html, body {
+    /* Reset & body */
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Poppins', sans-serif;
+      background: #f3f4f6;
     }
 
-    /* Flex container for sidebar + content + footer */
+    /* Page Wrapper */
     .page-wrapper {
       display: flex;
-      flex-direction: row;
       min-height: 100vh;
     }
 
+    /* Sidebar */
     aside {
-      width: 200px;
-      background-color: black;
-      color: white;
+      width: 220px;
+      background-color: #111;
+      color: #fff;
       display: flex;
       flex-direction: column;
       padding: 20px;
@@ -66,86 +62,89 @@
     nav a:hover {
       background-color: #4a5568;
     }
-     /* Dropdown container */
-.dropdown {
-  position: relative;
-}
 
-/* Dropdown content (hidden by default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  left: 100%; /* aligns right next to sidebar menu if needed */
-  top: 0;
-  background-color: black;
-  min-width: 160px;
-  z-index: 1;
-  flex-direction: column;
-  border-radius: 4px;
-  padding: 5px 0;
-}
+    /* Dropdown */
+    .dropdown {
+      position: relative;
+    }
 
-/* Dropdown links styling */
-.dropdown-content a {
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  display: block;
-  font-weight: 500;
-}
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      left: 100%;
+      top: 0;
+      background-color: black;
+      min-width: 160px;
+      z-index: 1;
+      flex-direction: column;
+      border-radius: 4px;
+      padding: 5px 0;
+    }
 
-.dropdown-content a:hover {
-  background-color: #1f2937;
-}
+    .dropdown-content a {
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+      font-weight: 500;
+    }
 
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
-  display: flex;
-}
+    .dropdown-content a:hover {
+      background-color: #1f2937;
+    }
 
+    .dropdown:hover .dropdown-content {
+      display: flex;
+    }
 
+    /* Main content */
     .main-content-wrapper {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      flex: 1;
     }
 
     .main-content {
-      padding: 20px;
-      flex: 1; /* takes remaining space, pushes footer down */
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
+      padding: 30px;
+      flex: 1;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 15px;
-      color: #333;
-    }
-
-    .edit-container {
-      background: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 800px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: 600;
+      color: #111827;
     }
 
     h3 {
       text-align: center;
-      margin-bottom: 20px;
-      color: #444;
-      font-family: Georgia, 'Times New Roman', Times, serif;
-      font-size: xx-large;
+      margin-bottom: 30px;
+      font-size: 22px;
+      color: #1f2937;
+      letter-spacing: 1px;
     }
 
+    /* Form container */
+    .edit-container {
+      background: linear-gradient(145deg, #ffffff, #f1f5f9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      max-width: 900px;
+      margin: 0 auto;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .edit-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    /* Form grid */
     .form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
     }
 
@@ -155,18 +154,27 @@
     }
 
     label {
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #444;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #374151;
+      letter-spacing: 0.5px;
     }
 
     input, select {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      padding: 12px 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
       font-size: 14px;
+      transition: all 0.2s ease;
     }
 
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Button container */
     .btn-container {
       display: flex;
       justify-content: flex-end;
@@ -174,45 +182,54 @@
       margin-top: 25px;
     }
 
-    button, a.cancel-btn {
-      padding: 10px 20px;
+    /* Buttons */
+    button, .cancel-btn {
+      padding: 12px 25px;
       border: none;
-      border-radius: 6px;
-      font-size: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
       text-decoration: none;
       text-align: center;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .btn-save {
-      background-color: #007bff;
+      background: linear-gradient(to right, #4f46e5, #6366f1);
       color: white;
     }
+
     .btn-save:hover {
-      background-color: #0056b3;
+      background: linear-gradient(to right, #4338ca, #4f46e5);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(99,102,241,0.3);
     }
 
     .cancel-btn {
-      background-color: #6c757d;
-      color: white;
-    }
-    .cancel-btn:hover {
-      background-color: #5a6268;
+      background: #e5e7eb;
+      color: #374151;
     }
 
+    .cancel-btn:hover {
+      background: #d1d5db;
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
     footer {
       background-color: #222;
       color: #fff;
       text-align: center;
       padding: 15px 0;
       flex-shrink: 0;
+      margin-top: 20px;
     }
 
     /* Mobile */
     @media (max-width: 768px) {
-      .page-wrapper {
-        flex-direction: column;
+      .form-grid {
+        grid-template-columns: 1fr;
       }
 
       aside {
@@ -222,10 +239,6 @@
         padding: 10px 20px;
         height: auto;
       }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
 </head>
@@ -234,32 +247,35 @@
 <div class="page-wrapper">
   <!-- Sidebar -->
   <aside>
-        <div class="logo">
-            <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
-        </div>
-        <h2><i>MANAGER'S DASHBOARD</i></h2>
-        <nav>
-            <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
-            <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
-            <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
-            <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
-            <div class="dropdown">
-          <i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
-        <div class="dropdown-content">
-        <a href="{% url 'summary_report' %}">SUMMARY REPORT</a>
-        <a href="{% url 'stock_report' %}">STOCK REPORT</a>
-        <a href="{% url 'sales_report' %}">SALES REPORT</a>
-      </div>
+    <div class="logo">
+      <img src="{% static 'images/2.png' %}" alt="Mayondo Wood and Furniture logo">
     </div>
-            <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+    <h2><i>DASHBOARD</i></h2>
+    <nav>
+      <a href="{% url 'dashboard' %}"><i class="bx bx-home"></i>DASHBOARD</a>
+      <a href="{% url 'sales_list' %}"><i class="bx bx-credit-card"></i>SALES</a>
 
-        </nav>
-    </aside> 
+      {% if user_role in "Admin Manager" %}
+        <a href="{% url 'stock_list' %}"><i class="bx bxs-store-alt"></i>STOCK</a>
+        <a href="{% url 'user_list' %}"><i class="bx bxs-user-circle"></i>EMPLOYEES</a>
+
+        <div class="dropdown">
+          <a><i class='bx bx-bar-chart'></i>REPORTS <i class='bx bx-chevron-down'></i></a>
+          <div class="dropdown-content">
+            <a href="{% url 'stock_report' %}">STOCK REPORT</a>
+            <a href="{% url 'sales_report' %}">SALES REPORT</a>
+          </div>
+        </div>
+      {% endif %}
+
+      <a href="{% url 'logout' %}"><i class="bx bxs-log-out"></i>LOGOUT</a>
+    </nav>
+  </aside>
 
   <!-- Main content -->
   <div class="main-content-wrapper">
     <div class="main-content">
-      <h1>Edit Sale Record</h1>
+      <!--<h1>Edit Sale Record</h1>-->
       <div class="edit-container">
         <h3><i>EDIT SALE</i></h3>
         <form action="{% url 'salesedit' selected.id %}" method="post">

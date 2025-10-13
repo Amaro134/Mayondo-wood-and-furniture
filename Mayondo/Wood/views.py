@@ -1,44 +1,82 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 from .models import Stock, Sales, Add_user
 from datetime import datetime
 from .forms import Add_userForm, SalesForm, StockForm, Add_userAuthenticationForm
-from .forms import StockForm
-from decimal import Decimal
-from django.contrib.auth import logout as auth_logout
-from django.shortcuts import redirect
+from decimal import Decimal, InvalidOperation
+from django.contrib.auth import logout as auth_logout, authenticate, login as auth_login
 from django.contrib import messages
+#from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login as auth_login
+from django.db.models import Sum, Avg, Count
+
+
 
 # ---------------- Landing ----------------
 def landingPage(request):
     return render(request, "index.html")
 
-def loginPage(request):
+def login_view(request):
+    print("login view called")
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        # Here you would typically validate the username and password
-        # For simplicity, let's assume any non-empty username and password is valid
-        if username and password:
-            return redirect("dashboard")  # Redirect to dashboard on successful login
+        form = Add_userAuthenticationForm(request.POST)
+        if form.is_valid():  # fixed typo here
+            print("login is valid")
+            user = form.cleaned_data.get('user')
+            auth_login(request, user)
+            return redirect("dashboard")
         else:
-            return render(request, "login.html", {"error": "Invalid credentials"})
-    return render(request, "login.html")
+            print("login form has errors")
+            print(form.errors)
+    else:
+            print("something wrong")
+            form = Add_userAuthenticationForm()
+    return render(request, "login.html", {"form": form})
+
+            
+
+# ---------------- Dashboard ----------------
+
+@login_required
+def dashboard(request):
+    user = request.user
+
+    # Determine user role (ensure it’s stored on your custom user model)
+    user_role = getattr(user, "role", None)
+
+    # Sales data
+    if user.is_superuser or user_role in ["Admin", "Manager"]:
+        sales = Sales.objects.all().order_by('-date_of_sale')[:5]
+        show_stock = True  # Admins/Managers see stock cards & table
+    elif user_role == "Sales Agent":
+        sales = Sales.objects.filter(sales_agent=user).order_by('-date_of_sale')[:5]
+        show_stock = False  # Hide stock cards & table for sales agents
+    else:
+        return HttpResponseForbidden("You do not have access to this dashboard.")
+
+    total_stock = Stock.objects.count() if show_stock else None
+    current_stock = Stock.objects.aggregate(Sum('quantity'))['quantity__sum'] if show_stock else None
+    restock_value = Stock.objects.aggregate(Sum('selling_price'))['selling_price__sum'] if show_stock else None
+
+    context = {
+        "sales": sales,
+        "show_stock": show_stock,
+        "total_stock": total_stock,
+        "current_stock": current_stock,
+        "restock_value": restock_value,
+        "stocks": Stock.objects.all().order_by('-date_added')[:5] if show_stock else None,
+        "user_role": user_role,  #  Add this line
+    }
+
+    return render(request, "dashboard.html", context)
 
 
 # ---------------- Stock Views ----------------
-# Show empty stock form
-# def addStock(request):
-#     if request.method == "POST":
-#         form = StockForm(request.POST)
-#         if form.is_valid():
-#             form.save()  # saves Stock object
-#             return redirect("stock_list")
-#     else:
-#         form = StockForm()
-
-
+@login_required
 def addStock(request):
+    if request.user.role not in ["Admin", "Manager"]:
+        return HttpResponseForbidden("You are not authorized to access this page.")
     if request.method == "POST":
         product_name = request.POST.get("product_name")
         type_of_product = request.POST.get("type_of_product")
@@ -51,11 +89,9 @@ def addStock(request):
 
         errors = []
 
-        # Validate empty fields
         if not all([product_name, type_of_product, costprice, selling_price, quantity, supplier_name, date_added, quality]):
             errors.append("All fields are required.")
 
-        # Validate number fields
         try:
             costprice = float(costprice)
             selling_price = float(selling_price)
@@ -63,11 +99,9 @@ def addStock(request):
         except ValueError:
             errors.append("Please enter valid numbers for cost, price, and quantity.")
 
-        # Validate positive numbers
         if not errors and (costprice <= 0 or selling_price <= 0 or quantity <= 0):
             errors.append("Values must be greater than zero.")
 
-        # Validate date format
         try:
             datetime.strptime(date_added, "%Y-%m-%d")
         except ValueError:
@@ -86,7 +120,6 @@ def addStock(request):
                 "quality": quality
             })
 
-        # Save stock
         stock = Stock(
             product_name=product_name,
             type_of_product=type_of_product,
@@ -102,84 +135,71 @@ def addStock(request):
         return redirect("stock_list")
 
     return render(request, "stock.html")
-
-
+#----stock_list----------
+@login_required
 def stock_list(request):
+    if request.user.role not in ["Admin", "Manager"]:
+        return HttpResponseForbidden("You are not authorized to access this page.")
     stocks = Stock.objects.all()
     return render(request, "stocklist.html", {"stocks": stocks})
 
-# ---------------- Edit Stock ----------------
+
+
+
+@login_required
 def stockedit(request, id):
+    if request.user.role not in ["Admin", "Manager"]:
+        return HttpResponseForbidden("You are not authorized to access this page.")
     stock = get_object_or_404(Stock, pk=id)
 
     if request.method == 'POST':
         stock.product_name = request.POST.get('product_name')
         stock.type_of_product = request.POST.get('type_of_product')
-        stock.costprice = request.POST.get('cost_price')  #  matches model field
-        stock.sellingprice = request.POST.get('selling_price')
+        stock.costprice = request.POST.get('costprice')
+        stock.selling_price = request.POST.get('selling_price')
         stock.quantity = request.POST.get('quantity')
-        stock.suppliername = request.POST.get('supplier_name')
+        stock.supplier_name = request.POST.get('supplier_name')
         stock.date_added = request.POST.get('date_added')
         stock.quality = request.POST.get('quality')
         stock.color = request.POST.get('color')
         stock.measurements = request.POST.get('measurements')
 
-        # Ensure costprice is not None or empty
         if not stock.costprice:
-            stock.costprice = 0  # or some default value
+            stock.costprice = 0
 
         stock.save()
-        return redirect('stock_list')  # redirect to your stock list page
+        return redirect('stock_list')
 
     return render(request, 'stockedit.html', {'selected': stock})
 
-
-# View one stock item by ID
+@login_required
 def stockview(request, id):
+    if request.user.role not in ["Admin", "Manager"]:
+        return HttpResponseForbidden("You are not authorized to access this page.")
     stock = get_object_or_404(Stock, id=id)
     return render(request, "stockview.html", {"selected": stock})
 
+@login_required
 def stockdelete(request, id):
+    if request.user.role not in ["Admin", "Manager"]:
+        return HttpResponseForbidden("You are not authorized to access this page.")
     stock = get_object_or_404(Stock, id=id)
     if request.method == "POST":
         stock.delete()
         return redirect('stock_list')
     return render(request, "stockdelete.html", {"stock": stock})
- # make sure this matches your URL name
 
+@login_required
 def stockupdate(request, id):
+    if request.user.role not in ["Admin", "Manager"]:
+        return HttpResponseForbidden("You are not authorized to access this page.")
     stock = get_object_or_404(Stock, id=id)
-    # Example: maybe you want to show a prefilled form
     return render(request, "stockedit.html", {"stock": stock})
 
-# ---------------- Dashboard ----------------
-def dashboard(request):
-    # Get latest 5 stocks and sales
-    stocks = Stock.objects.all().order_by('-date_added')[:5]
-    sales = Sales.objects.all().order_by('-date_of_sale')[:5]
 
-    # Summary calculations
-    total_stock = Stock.objects.count()  # total products
-    current_stock = Stock.objects.filter(quantity__gt=0).count()  # available products
-    restock_value = sum(item.costprice * item.quantity for item in Stock.objects.all())  # total cost
 
-    context = {
-        "total_stock": total_stock,
-        "current_stock": current_stock,
-        "restock_value": restock_value,
-        "stocks": stocks,
-        "sales": sales,
-    }
-
-    return render(request, "dashboard.html", context)
 
 # ---------------- Sales Views ----------------
-# Handle sales form submission
-
-
-# views.py
-from decimal import Decimal
-
 def add_sales(request):
     if request.method == "POST":
         customer_name = request.POST.get("customer_name")
@@ -192,12 +212,10 @@ def add_sales(request):
         date_of_sale = request.POST.get("date_of_sale")
         sales_agent = request.POST.get("sales_agent")
 
-        # Check required fields
         if not all([customer_name, product, quantity_sold, product_price, payment_method, transport_used, date_of_sale, sales_agent]):
             messages.error(request, "Please fill in all required fields.")
             return redirect("add_sales")
 
-        # Validate numeric fields
         try:
             quantity_sold = Decimal(quantity_sold)
             product_price = Decimal(product_price)
@@ -209,7 +227,6 @@ def add_sales(request):
             messages.error(request, "Quantity and Product Price must be greater than zero.")
             return redirect("add_sales")
 
-        # Calculate total if not entered
         if not total_amount:
             total_amount = quantity_sold * product_price
         else:
@@ -219,7 +236,10 @@ def add_sales(request):
                 messages.error(request, "Total amount must be a valid number.")
                 return redirect("add_sales")
 
-        # Save the sale
+        if transport_used.replace("_", " ").lower() == "company provision":
+            extra_charge = total_amount * Decimal("0.05")
+            total_amount += extra_charge
+
         sale = Sales(
             customer_name=customer_name,
             product=product,
@@ -232,14 +252,55 @@ def add_sales(request):
             sales_agent=sales_agent,
         )
         sale.save()
+
         messages.success(request, "Sale added successfully!")
         return redirect("sales_list")
 
     return render(request, "add_sales.html")
-# List all sales
+
+
+
+def stock_report(request):
+    stocks = Stock.objects.all().order_by('-date_added')
+
+    # Date filter
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    if start_date and end_date:
+        stocks = stocks.filter(date_added__range=[start_date, end_date])
+
+    total_products = stocks.count()
+    total_quantity = stocks.aggregate(total=Sum('quantity'))['total'] or 0
+    total_value = stocks.aggregate(total=Sum('selling_price'))['total'] or 0
+    low_stock_count = stocks.filter(quantity__lt=5).count()
+
+    context = {
+        'stocks': stocks,
+        'total_products': total_products,
+        'total_quantity': total_quantity,
+        'total_value': total_value,
+        'low_stock_count': low_stock_count,
+        'start_date': start_date,
+        'end_date': end_date,
+    }
+
+    return render(request, "stockreport.html", context)
+
+# -----Sales_list view-----------
+@login_required
 def sales_list(request):
-    all_sales = Sales.objects.all()
-    return render(request, "sales_list.html", {"sales": all_sales})
+    user = request.user
+
+    if user.is_superuser or user.role in ["Admin", "Manager"]:
+        sales = Sales.objects.all().order_by('-date_of_sale')
+    elif user.role == "Sales Agent":
+        sales = Sales.objects.filter(sales_agent=user).order_by('-date_of_sale')
+    else:
+        return HttpResponseForbidden("You do not have access to this page.")
+
+    context = {"sales": sales}
+    return render(request, "sales_list.html", context)
 
 def salesedit(request, id):
     try:
@@ -262,33 +323,34 @@ def salesedit(request, id):
         return redirect("sales_list")
     return render(request, "salesedit.html", {"selected": selected})
 
+
 def salesdelete(request, id):
     sales = get_object_or_404(Sales, id=id)
-    
     if request.method == "POST":
-        sales.delete()  # actually deletes the record
-        return redirect("sales_list")  # redirect to your sales list view
-    
-    # if GET, show confirmation page
+        sales.delete()
+        return redirect("sales_list")
     return render(request, "salesdelete.html", {"sales": sales})
+
 
 def salesview(request, id):
     sale = get_object_or_404(Sales, id=id)
     return render(request, "salesview.html", {"selected_sale": sale})
-#---- receipt-----
+
+
 def salesreceipt(request, sale_id):
     sale = get_object_or_404(Sales, id=sale_id)
     return render(request, 'salesreceipt.html', {'sale': sale})
 
-# the adduser views
+
+# ---------------- User Views ----------------
 def adduser(request):
     if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")
         role = request.POST.get("role")
         password = request.POST.get("password")
+        
 
-        #  Validation checks
         if not username or not email or not role or not password:
             messages.error(request, "All fields are required.")
             return render(request, "add_user.html")
@@ -300,52 +362,66 @@ def adduser(request):
         if Add_user.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
             return render(request, "add_user.html")
-
-        #  Create user
+        
+        print(password)
         user = Add_user(username=username, email=email, role=role)
-        user.set_password(password)  # hash password properly
+        user.set_password(password)
         user.save()
 
         messages.success(request, "User added successfully!")
-        return redirect("user_list")  # redirect to user list page
+        return redirect("user_list")
 
     return render(request, "add_user.html")
+
 
 def user_list(request):
     users = Add_user.objects.all()
     return render(request, "user_list.html", {"users": users})
 
+
 def user_edit(request, id):
-    selected = Add_user.objects.get(id=id)
+    selected = get_object_or_404(Add_user, id=id)
 
-    if request.method == "POST":
-        selected.name = request.POST.get("username")
-        selected.email = request.POST.get("email")
-        selected.role = request.POST.get("role")
-        selected.password = request.POST.get("password")
-        selected.save()
-        return redirect("user_list")  # or wherever you want to go after editing
+    if request.method == 'POST':
+        form = Add_userForm(request.POST, instance=selected)
+        if form.is_valid():
+            user = form.save(commit=False)
 
-    return render(request, "user_edit.html", {"selected": selected})
+            # Preserve old password if no new one provided
+            if not form.cleaned_data.get('password'):
+                user.password = selected.password
+            else:
+                user.set_password(form.cleaned_data['password'])
+
+            user.save()
+            return redirect('user_list')
+    else:
+        form = Add_userForm(instance=selected)
+
+    # Notice we’re passing BOTH `form` and `selected` to the template
+    return render(request, 'user_edit.html', {
+        'form': form,
+        'selected': selected,
+    })
 
 def user_delete(request, id):
     selected = Add_user.objects.get(id=id)
     return render(request, "user_delete.html", {"selected": selected})
 
+
 def user_view(request, id):
     selected = get_object_or_404(Add_user, id=id)
     return render(request, "user_view.html", {"selected": selected})
 
-def logout(request):
+
+def logout_view(request):
     if request.method == "POST":
-        auth_logout(request)  # Logs the user out
-        return redirect("/")  # Redirect to homepage after logout
-    return render(request, "logout.html")  # Redirect to homepage or login
+        auth_logout(request)
+        return redirect("login")
+    return render(request, "logout.html")
 
 
-from django.db.models import Sum
-
-# Report dashboard – overview page
+# ---------------- Reports ----------------
 def report_dashboard(request):
     total_sales = Sales.objects.aggregate(total=Sum('total_amount'))['total'] or 0
     total_stock = Stock.objects.count()
@@ -356,45 +432,40 @@ def report_dashboard(request):
         "total_products": total_products,
     })
 
-# Sales report – detailed sales data
+
+
+@login_required
 def sales_report(request):
     sales = Sales.objects.all().order_by('-date_of_sale')
-    total_sales = sales.aggregate(total=Sum('total_amount'))['total'] or 0
-    return render(request, "salesreport.html", {
-        "sales": sales,
-        "total_sales": total_sales,
-    })
 
-# Stock report – all stock items and totals
-def stock_report(request):
-    stocks = Stock.objects.all().order_by('-date_added')
-    total_stock = stocks.aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
-    return render(request, "stockreport.html", {
-        "stocks": stocks,
-        "total_stock": total_stock,
-    })
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
-#Combined summary report – sales + stock overview
-def summary_report(request):
-    # --- Sales Summary ---
-    total_sales_amount = Sales.objects.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
-    total_quantity_sold = Sales.objects.aggregate(Sum('quantity_sold'))['quantity_sold__sum'] or 0
-    total_sales_count = Sales.objects.count()
+    if start_date and end_date:
+        sales = sales.filter(date_of_sale__range=[start_date, end_date])
 
-    # --- Stock Summary ---
-    total_stock_items = Stock.objects.count()
-    total_stock_quantity = Stock.objects.aggregate(Sum('quantity'))['quantity__sum'] or 0
-    total_stock_value = Stock.objects.aggregate(Sum('costprice'))['costprice__sum'] or 0
+    # Summary values
+    total_sales_count = sales.count()
+    total_revenue = sales.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+    avg_sale = sales.aggregate(Avg('total_amount'))['total_amount__avg'] or 0
 
-    # --- Combined Report Context ---
+    # Find top product
+    top = (
+        sales.values('product')
+        .annotate(total_sold=Sum('quantity_sold'))
+        .order_by('-total_sold')
+        .first()
+    )
+    top_product = top['product'] if top else None
+
     context = {
-        "total_sales_amount": total_sales_amount,
-        "total_quantity_sold": total_quantity_sold,
-        "total_sales_count": total_sales_count,
-        "total_stock_items": total_stock_items,
-        "total_stock_quantity": total_stock_quantity,
-        "total_stock_value": total_stock_value,
+        'sales': sales,
+        'total_sales_count': total_sales_count,
+        'total_revenue': total_revenue,
+        'avg_sale': round(avg_sale, 2),
+        'top_product': top_product,
+        'start_date': start_date,
+        'end_date': end_date,
     }
 
-    return render(request, "summary_report.html", context)
-
+    return render(request, "salesreport.html", context)

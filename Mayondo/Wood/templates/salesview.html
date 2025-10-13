@@ -20,6 +20,7 @@
     <nav class="flex flex-col gap-3">
       <a href="{% url 'dashboard' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-home'></i>DASHBOARD</a>
       <a href="{% url 'add_sales' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bx-credit-card'></i>SALES</a>
+      {% if user_role in "Admin Manager" %}
       <a href="{% url 'stock_list' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-store-alt'></i>STOCK</a>
       <a href="{% url 'user_list' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-user-circle'></i>EMPLOYEES</a>
         <div class="dropdown">
@@ -29,6 +30,7 @@
         <a href="{% url 'sales_report' %}">Sales Report</a>
       </div>
     </div>
+     {% endif %}
       <a href="{% url 'logout' %}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition"><i class='bx bxs-log-out'></i>LOGOUT</a>
     </nav>
   </aside>

@@ -2,6 +2,7 @@ from django import forms
 from .models import Stock, Sales, Add_user
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
+from django.contrib.auth import authenticate
 
 # ---------------- Add User Forms ----------------
 class Add_userForm(UserCreationForm):
@@ -12,18 +13,60 @@ class Add_userForm(UserCreationForm):
     username = forms.CharField(error_messages={"required": "Username is required."})
     email = forms.EmailField(error_messages={"required": "Email is required.", "invalid": "Please enter a valid email."})
     role = forms.ChoiceField(choices=Add_user.ROLE_CHOICES, error_messages={"required": "Your role is required."})
-    
+
     def clean_username(self):
         username = self.cleaned_data["username"]
         if len(username) < 3:
             raise forms.ValidationError("Username must be at least 3 characters long.")
         return username
 
-
-class Add_userAuthenticationForm(AuthenticationForm):
+class Add_userAuthenticationForm(forms.Form):
     username = forms.CharField(error_messages={"required": "Username is required."})
     password = forms.CharField(error_messages={"required": "Password is required."})
 
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get("username")
+        password = cleaned_data.get("password")
+
+        if username and password: 
+            print(f"username: {username}")
+            print(f"password: {password}")
+            user = authenticate(username=username, password=password)
+            print(f"User details: {user}")
+            
+            # Debugging the result of authenticate()
+            if user is None:
+                raise forms.ValidationError("Please enter correct credentials.")
+
+            # If authenticate() works, add user to cleaned_data for further use
+            cleaned_data["user"] = user
+        else:
+            raise forms.ValidationError("Both username and password are required.")  # In case one of them is missing
+
+        return cleaned_data
+
+# class Add_userAuthenticationForm(forms.Form):
+#     username = forms.CharField(error_messages={"required": "Username is required."})
+#     password = forms.CharField(error_messages={"required": "Password is required."})
+
+#     def clean(self):
+#         cleaned_data = super().clean() 
+#         username = cleaned_data.get("username")
+#         password = cleaned_data.get("password")
+#         print(f"username: {username}")
+#         print(f"password: {password}")
+
+#         if username and password: 
+#             print(f"username: {username}")
+#             print(f"password: {password}")
+
+#             user = authenticate(username=username, password=password)
+#             print(f"User details: {user}")
+#             if user is None: 
+#                 raise forms.ValidationError("please enter your correct credentials.")
+#             cleaned_data["user"] = user
+#         return cleaned_data
 
 # ---------------- Sales Form ----------------
 class SalesForm(forms.ModelForm):
@@ -83,58 +126,4 @@ class StockForm(forms.ModelForm):
         return price
 
 
-# class StockForm(forms.ModelForm):
-#     class Meta:
-#         model = Stock
-#         fields = [
-#             'product_name',
-#             'type_of_product',
-#             'cost_price',
-#             'selling_price',
-#             'quantity',
-#             'supplier_name',
-#             'quality',
-# #         ]
-#         widgets = {
-#             'product_name': forms.TextInput(attrs={
-#                 'class': 'w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400'
-#             }),
-#             'type_of_product': forms.TextInput(attrs={
-#                 'class': 'w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400'
-#             }),
-           
-#             'costprice': forms.NumberInput(attrs={
-#                  'class': 'w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400'
-#     }),
 
-#             'selling_price': forms.NumberInput(attrs={
-#                 'class': 'w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400'
-#             }),
-#             'quantity': forms.NumberInput(attrs={
-#                 'class': 'w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400'
-#             }),
-#             'supplier_name': forms.TextInput(attrs={
-#                 'class': 'w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400'
-#             }),
-
-#             'quality': forms.TextInput(attrs={
-#                 'class': 'w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400'
-#             }),
-#         }
-
-#     def clean(self):
-#         cleaned_data = super().clean()
-#         cost_price = cleaned_data.get('cost_price')
-#         selling_price = cleaned_data.get('selling_price')
-#         quantity = cleaned_data.get('quantity')
-
-#         if cost_price is not None and cost_price <= 0:
-#             self.add_error('cost_price', 'Cost price must be greater than zero.')
-
-#         if selling_price is not None and selling_price <= 0:
-#             self.add_error('selling_price', 'Selling price must be greater than zero.')
-
-#         if quantity is not None and quantity <= 0:
-#             self.add_error('quantity', 'Quantity must be greater than zero.')
-
-#         return cleaned_data

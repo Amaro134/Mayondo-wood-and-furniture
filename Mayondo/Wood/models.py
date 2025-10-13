@@ -2,13 +2,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-class Login(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.CharField(unique=True)
-    password = models.CharField(max_length=100)
+# class Login(models.Model):
+#     name = models.CharField(max_length=100)
+#     email = models.CharField(unique=True)
+#     password = models.CharField(max_length=100)
 
-    def __str__(self):
-        return str(self.name)
+    # def __str__(self):
+    #     return str(self.name)
 class Sales(models.Model):
     PAYMENT_CHOICES = [
         ("Cash", "Cash"),

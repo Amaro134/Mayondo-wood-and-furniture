@@ -23,7 +23,8 @@ urlpatterns = [
     
      # Landing page
     path('', views.landingPage, name="landingPage"),
-    path('login/', views.loginPage, name='login'),  # login page
+    path('login/', views.login_view, name='login'),  # login page
+    path('dashboard/', views.dashboard, name='dashboard'),
     # Stock routes
     path('addStock/', views.addStock, name='addStock'),  # shows stock form & handles submit
     path('stock/', views.stock_list, name='stock_list'),
@@ -39,7 +40,7 @@ urlpatterns = [
     # update sales
     # path('report/', views.report_view, name='report'),
     #dashboard
-    path('dashboard/', views.dashboard, name='dashboard'),
+   
     
     # User routes
     path('user_list/', views.user_list, name='user_list'),  # lists all users
@@ -47,12 +48,12 @@ urlpatterns = [
     path('useredit/<int:id>/', views.user_edit, name='user_edit'),  # edit user
     path('user_delete/<int:id>/', views.user_delete, name='user_delete'),  # delete user
     path('user_view/<int:id>/', views.user_view, name='user_view'),  # view user details
-    path('logout/', views.logout, name='logout'),  # logout user
+    path('logout/', views.logout_view, name='logout'),  # logout user
     #   Report
     path('reports/', views.report_dashboard, name='report_dashboard'),
     path('sales_report/', views.sales_report, name='sales_report'),
     path('stock_report/', views.stock_report, name='stock_report'),
-    path('summary_report/', views.summary_report, name='summary_report'),
+    # path('summary_report/', views.summary_report, name='summary_report'),
     path('salesreceipt/<int:sale_id>/', views.salesreceipt, name='salesreceipt')
 
 ]

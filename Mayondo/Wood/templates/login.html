@@ -7,10 +7,9 @@
   <title>Login Page</title>
 
   <!-- Boxicons for eye icon -->
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
   <style>
-    /* Reset */
     * {
       margin: 0;
       padding: 0;
@@ -30,7 +29,6 @@
       align-items: center;
     }
 
-    /* Background image */
     body::before {
       content: "";
       position: absolute;
@@ -78,7 +76,7 @@
 
     .login-container input {
       width: 100%;
-      padding: 10px 40px 10px 12px; /* Add space for eye icon */
+      padding: 10px 40px 10px 12px;
       margin-bottom: 18px;
       border: 1px solid #ccc;
       border-radius: 8px;
@@ -126,6 +124,20 @@
       background: #2a5298;
     }
 
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .success-message {
+      color: green;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -133,30 +145,37 @@
   </style>
 </head>
 <body>
-  <div class="login-container">
+ <div class="login-container">
     <img src="{% static 'images/2.png' %}" alt="Login Icon" width="60" height="60">
     <h2>Welcome Back</h2>
     <p><i>Login to access your dashboard</i></p>
 
-    <form method="post">
+    <!-- Django Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div style="color: red;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url "login" %}">
       {% csrf_token %}
 
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
+      <label for="username">Username</label>
+      <input type="text"  name="username" placeholder="Enter your username" required>
 
       <label for="password">Password</label>
-      <div class="password-wrapper">
-        <input type="password" id="password" name="password" required>
-        <i class='bx bx-show toggle-password' id="togglePassword"></i>
-      </div>
+<div class="password-wrapper">
+  <input type="password" id="password" name="password" placeholder="Enter your password" required>
+  <i class='bx bx-show toggle-password' id="togglePassword"></i>
+</div>
 
-      <div class="flex justify-center">
-        <button type="submit" class="mt-6 flex items-center justify-center px-8 py-3 text-base font-normal text-white bg-teal-400 border border-transparent rounded-full text-md hover:bg-teal-300 md:py-4 md:text-2xl md:px-10">
-          Login
-        </button>
-      </div>
+
+      <button type="submit">Login</button>
     </form>
-  </div>
+</div>
+
 
   <script>
     const togglePassword = document.getElementById("togglePassword");
@@ -165,7 +184,6 @@
     togglePassword.addEventListener("click", function () {
       const type = password.getAttribute("type") === "password" ? "text" : "password";
       password.setAttribute("type", type);
-
       this.classList.toggle("bx-show");
       this.classList.toggle("bx-hide");
     });
